@@ -38,6 +38,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.example.majkomulti.MajkoResource
 import com.example.majkomulti.commons.Constantas
 import com.example.majkomulti.components.BlueRoundedButton
@@ -94,7 +95,7 @@ private fun SetProfileScreen(uiState: ProfileState, onUpdateUserName: (String) -
         verticalArrangement = Arrangement.Center
     ) {
         if(uiState.avatar.isNotEmpty()){
-            AsyncImage(
+            SubcomposeAsyncImage(
                (Constantas.BASE_URL + uiState.avatar),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,

@@ -1,6 +1,15 @@
 package com.example.majkomulti.domain.repository
 
+import com.example.majkomulti.data.models.NoteData.NoteById
+import com.example.majkomulti.data.models.NoteData.NoteData
+import com.example.majkomulti.data.models.NoteData.NoteUpdate
 import com.example.majkomulti.data.models.Task.SearchTask
+import com.example.majkomulti.data.models.Task.TaskById
+import com.example.majkomulti.data.models.Task.TaskByIdUnderscore
+import com.example.majkomulti.data.models.Task.TaskData
+import com.example.majkomulti.data.models.Task.TaskUpdateData
+import com.example.majkomulti.domain.modelsUI.MessageDataUi
+import com.example.majkomulti.domain.modelsUI.Note.NoteDataUi
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
 import com.example.majkomulti.platform.Either
 import com.example.majkomulti.platform.Failure
@@ -10,29 +19,29 @@ interface TaskRepository {
 
     suspend fun getAllUserTask(search: SearchTask): Either<Failure, List<TaskDataUi>>
 
- //   fun postNewTask(task: TaskData): TaskDataUi
+    suspend fun postNewTask(task: TaskData): Either<Failure, TaskDataUi>
 
- //   fun getTaskById(taskId: TaskById): Flow<ApiResult<TaskDataResponseUi>>
+    suspend fun getTaskById(taskId: TaskById): Either<Failure, TaskDataUi>
 
- //   fun removeTask(taskId: TaskByIdUnderscore): Flow<ApiResult<Unit>>
+    suspend fun removeTask(taskId: TaskByIdUnderscore): Either<Failure, Unit>
 
- //   fun updateTask(taskData: TaskUpdateData): Flow<ApiResult<TaskDataResponseUi>>
+    suspend fun updateTask(taskData: TaskUpdateData):Either<Failure, TaskDataUi>
 
- //   fun getSubtask(taskId: TaskById): Flow<ApiResult<List<TaskDataResponseUi>>>
+    suspend fun getSubtask(taskId: TaskById): Either<Failure, List<TaskDataUi>>
 
     //фавориты
-   // fun removeFavotire(taskId: TaskById): Flow<ApiResult<MessageDataUi>>
+    suspend fun removeFavotire(taskId: TaskById): Either<Failure, MessageDataUi>
 
- //   fun addToFavorite(taskId: TaskById): Flow<ApiResult<MessageDataUi>>
+    suspend fun addToFavorite(taskId: TaskById): Either<Failure, MessageDataUi>
 
     suspend fun getAllFavorites(): Either<Failure, List<TaskDataUi>>
 
     //записи
- //   fun addNote(note: NoteData) : Flow<ApiResult<NoteDataResponseUi>>
+    suspend fun addNote(note: NoteData) : Either<Failure, NoteDataUi>
 
-  //  fun updateNote(note: NoteUpdate) : Flow<ApiResult<NoteDataResponseUi>>
+    suspend fun updateNote(note: NoteUpdate) : Either<Failure, NoteDataUi>
 
-  //  fun removeNote(noteId: NoteById) : Flow<ApiResult<Unit>>
+    suspend fun removeNote(noteId: NoteById) : Either<Failure, Unit>
 
-  //  fun getNotes(taskId: TaskById) : Flow<ApiResult<List<NoteDataResponseUi>>>
+    suspend fun getNotes(taskId: TaskById) : Either<Failure, List<NoteDataUi>>
 }

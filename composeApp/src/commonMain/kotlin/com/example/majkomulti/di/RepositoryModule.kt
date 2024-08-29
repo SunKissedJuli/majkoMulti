@@ -3,7 +3,11 @@ package com.example.majkomulti.di
 import com.example.majkomulti.data.repository.UserRepositoryImpl
 import com.example.majkomulti.data.repository.TaskRepositoryImpl
 import com.example.majkomulti.data.repository.InfoRepositoryImpl
+import com.example.majkomulti.data.repository.GroupRepositoryImpl
+import com.example.majkomulti.data.repository.ProjectRepositoryImpl
+import com.example.majkomulti.domain.repository.GroupRepository
 import com.example.majkomulti.domain.repository.InfoRepository
+import com.example.majkomulti.domain.repository.ProjectRepository
 import com.example.majkomulti.domain.repository.TaskRepository
 import com.example.majkomulti.domain.repository.UserRepository
 import org.koin.core.module.dsl.factoryOf
@@ -14,5 +18,7 @@ val repositoryModule = module {
     factoryOf(::UserRepositoryImpl) { bind<UserRepository>() }
     factoryOf(::TaskRepositoryImpl) { bind<TaskRepository>() }
     factoryOf(::InfoRepositoryImpl) { bind<InfoRepository>() }
+    factoryOf(::GroupRepositoryImpl) { bind<GroupRepository>() }
+    factoryOf(::ProjectRepositoryImpl) { bind<ProjectRepository>() }
 }
 

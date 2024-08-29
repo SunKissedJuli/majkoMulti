@@ -39,6 +39,7 @@ import com.example.majkomulti.screen.task.TaskScreen
 import com.example.majkomulti.strings.MajkoResourceStrings
 import kotlinx.coroutines.launch
 import com.example.majkomulti.images.MajkoResourceImages
+import com.example.majkomulti.screen.MainVerticalTab.MainVerticalTabScreen
 import io.github.skeptick.libres.compose.painterResource
 
 @Composable
@@ -55,7 +56,7 @@ internal actual fun SplashScreenContent(viewModel: SplashViewModel) {
             viewModel.container.sideEffectFlow.collect() {
                 when (it) {
                     is SplashEvent.UserAutorize -> {
-                        navigator.push(TaskScreen())
+                        navigator.replaceAll(MainVerticalTabScreen())
                     }
                     is SplashEvent.UserNotAutorize ->{
                         navigator.push(RegistrationScreen())

@@ -53,21 +53,6 @@ internal actual fun TaskScreenContent(viewModel: TaskViewModel) {
     }
 
     Row(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-        Column(Modifier.fillMaxHeight().width(250.dp)
-            .background(MaterialTheme.colorScheme.secondary)) {
-            Column(Modifier.fillMaxSize().padding(top = 50.dp, start = 30.dp)){
-                TextButton(onClick = {navigator.push(ProfileScreen())}){
-                    Text(text = "Профиль", color = MaterialTheme.colorScheme.onSecondary,
-                        fontWeight = FontWeight.Medium, fontSize = 18.sp)
-                }
-
-                TextButton(onClick = {}){
-                    Text(text = "Задачи",  color = MaterialTheme.colorScheme.onSecondary,
-                        fontWeight = FontWeight.Medium, fontSize = 18.sp)
-                }
-            }
-        }
-
 
         Column(Modifier.fillMaxSize()) {
             Row(
@@ -83,7 +68,6 @@ internal actual fun TaskScreenContent(viewModel: TaskViewModel) {
                         SearchBox(uiState.searchString, { viewModel.updateSearchString(it, 2) },
                             placeholder = "Искать в задачах...")
                     }
-
                 }
 
             }
@@ -94,7 +78,7 @@ internal actual fun TaskScreenContent(viewModel: TaskViewModel) {
             ) {
                 item {
                     LazyColumn(
-                        Modifier.width(250.dp),
+                        Modifier.width(200.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -178,9 +162,9 @@ private fun LazyTaskColumn(
     status: (Int)-> String,
     color: @Composable (Int)-> Color,
     text: String){
-    Spacer(Modifier.width(30.dp))
+    Spacer(Modifier.width(15.dp))
 
-    LazyColumn(Modifier.width(250.dp),
+    LazyColumn(Modifier.width(200.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)){
         item {

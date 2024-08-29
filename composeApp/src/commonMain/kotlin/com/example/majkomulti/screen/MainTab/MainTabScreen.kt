@@ -29,10 +29,10 @@ class MainTabScreen(): Screen {
                             backgroundColor = MaterialTheme.colorScheme.background,
                             contentColor = MaterialTheme.colorScheme.onSecondary
                         ) {
+                            TabNavItem(GroupTab)
+                            TabNavItem(ProjectTab)
                             TabNavItem(TaskTab)
-                            TabNavItem(TaskTab)
-                            TabNavItem(TaskTab)
-                            TabNavItem(TaskTab)
+                            TabNavItem(ArchiveTab)
                             TabNavItem(ProfileTab)
                         }
                 }

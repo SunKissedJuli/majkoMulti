@@ -89,12 +89,12 @@ fun TaskCard(navigator: Navigator,
         ){
 
             if(!taskData.creator.get(0).image.isNullOrEmpty()){
-/*                AsyncImage((Constantas.BASE_URL + taskData.creator.get(0).image),
+                AsyncImage((Constantas.BASE_URL + taskData.creator.get(0).image),
                     contentDescription = "",
                     Modifier
                         .size(27.dp)
                         .clip(CircleShape),
-                    contentScale = ContentScale.Crop)*/
+                    contentScale = ContentScale.Crop)
             }else{
                 Box(
                     Modifier

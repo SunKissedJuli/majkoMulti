@@ -40,7 +40,8 @@ kotlin {
             implementation(libs.koin.android)
         }
         commonMain.dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
+           // implementation(libs.kotlinx.coroutines.swing)
+           // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
@@ -48,8 +49,8 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-          //  implementation(libs.androidx.lifecycle.viewmodel)
-          //  implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.libres.compose)
 
             implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -94,6 +95,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
             implementation("com.squareup.okhttp3:okhttp:4.11.0")
             implementation(libs.ktor.client.okhttp)
+           // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.9.0-RC.2")
         }
     }
 }
@@ -148,7 +150,8 @@ compose.desktop {
 }
 
 dependencies {
-   // implementation(project(":composeApp"))
+   implementation(project(":composeApp"))
+    // implementation(project(":composeApp"))
     // implementation(project(":composeApp"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
     val ktorfitVersion = libs.versions.ktorfit.asProvider().get()

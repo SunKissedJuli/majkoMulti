@@ -1,8 +1,14 @@
 package com.example.majkomulti.data.mapper
 
+import com.example.majkomulti.data.models.GroupData.GroupResponse
 import com.example.majkomulti.data.models.ProjectData.ProjectDataResponse
+import com.example.majkomulti.domain.modelsUI.Group.GroupUi
 import com.example.majkomulti.domain.modelsUI.Project.ProjectDataUi
 import com.example.majkomulti.domain.modelsUI.User.CurrentUserDataUi
+
+fun List<ProjectDataResponse>.toUI(): List<ProjectDataUi> {
+    return map { it.toUI() }
+}
 
 fun ProjectDataResponse.toUI() : ProjectDataUi {
     return ProjectDataUi(

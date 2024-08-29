@@ -1,7 +1,6 @@
 package com.example.majkomulti.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
@@ -33,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,7 +46,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TaskCard(navigator: Navigator,
+fun TaskDesktopCard(navigator: Navigator,
              priorityColor : Color = MaterialTheme.colorScheme.background,
              statusName : String,
              taskData: TaskDataUi,
@@ -142,11 +140,8 @@ fun TaskCard(navigator: Navigator,
                             + ", " + dateTime.dayOfMonth + " "
                             + dateTime.month.getDisplayName(TextStyle.FULL, Locale("ru")), fontSize = 13.sp, fontWeight = FontWeight.Medium)
                 }
-                Row(Modifier.padding(start = 10.dp, bottom = 2.dp), horizontalArrangement = Arrangement.Center){
-                    Text(text= "Статус: " + statusName, fontSize = 13.sp, fontWeight = FontWeight.Medium)
-                }
                 if(taskData.project.name.isNotEmpty()){
-                    Row(Modifier.padding(start = 10.dp), horizontalArrangement = Arrangement.Center){
+                    Row(Modifier.padding(start = 10.dp, bottom = 5.dp, end = 5.dp), horizontalArrangement = Arrangement.Center){
                         Text(text= "Проект: " + taskData.project.name, fontSize = 13.sp, fontWeight = FontWeight.Medium, maxLines = 2)
                     }
                 }
@@ -157,7 +152,7 @@ fun TaskCard(navigator: Navigator,
                     .fillMaxSize()
                     .padding(bottom = 10.dp),
                 verticalAlignment = Alignment.Bottom){
-               // Image(painter = painterResource(R.drawable.icon_subtask), contentDescription = "", Modifier.size(20.dp))
+                // Image(painter = painterResource(R.drawable.icon_subtask), contentDescription = "", Modifier.size(20.dp))
                 Text(text = taskData.countSubtasks.toString())
             }
         }

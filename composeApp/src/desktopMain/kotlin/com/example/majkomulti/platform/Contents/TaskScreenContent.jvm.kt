@@ -33,11 +33,14 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.majkomulti.components.SearchBox
 import com.example.majkomulti.components.TaskCard
+import com.example.majkomulti.components.TaskDesktopCard
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
 import com.example.majkomulti.screen.profile.ProfileScreen
 import com.example.majkomulti.screen.task.TaskState
 import com.example.majkomulti.screen.task.TaskViewModel
+import com.example.majkomulti.strings.MajkoResourceStrings
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -57,45 +60,46 @@ internal actual fun TaskScreenContent(viewModel: TaskViewModel) {
         Column(Modifier.fillMaxSize()) {
             Row(
                 Modifier.fillMaxWidth().height(60.dp)
-                    .background(MaterialTheme.colorScheme.secondary),
+                    .background(MaterialTheme.colorScheme.onSecondaryContainer),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(Modifier.fillMaxWidth(0.5f).height(40.dp).clip(RoundedCornerShape(30.dp))
                     .background(MaterialTheme.colorScheme.primary),
                     verticalAlignment = Alignment.CenterVertically){
-                    if(!uiState.allTaskList.isNullOrEmpty()){
+                   // if(!uiState.allTaskList.isNullOrEmpty()){
                         SearchBox(uiState.searchString, { viewModel.updateSearchString(it, 2) },
-                            placeholder = "Искать в задачах...")
-                    }
+                            placeholder = MajkoResourceStrings.task_search
+                        )
+                   // }
                 }
 
             }
 
             LazyRow(
-                Modifier.fillMaxSize().padding(30.dp),
+                Modifier.fillMaxSize().padding(20.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
                     LazyColumn(
                         Modifier.width(200.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         item {
                             Text(
                                 text = "Избранные",
                                 color = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.padding(
-                                    start = 15.dp,
-                                    top = 10.dp,
-                                    bottom = 10.dp
+                                    start = 10.dp,
+                                    top = 5.dp,
+                                    bottom = 5.dp
                                 )
                             )
                         }
                         if (favoritesTaskList != null) {
                             items(favoritesTaskList.size) { index ->
-                                TaskCard(
+                                TaskDesktopCard(
                                     navigator,
                                     statusName = viewModel.getStatus(favoritesTaskList[index].status),
                                     priorityColor = viewModel.getPriority(favoritesTaskList[index].priority),
@@ -166,15 +170,17 @@ private fun LazyTaskColumn(
 
     LazyColumn(Modifier.width(200.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)){
+        verticalArrangement = Arrangement.spacedBy(5.dp)){
         item {
             Text(text = text,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp))
+                modifier = Modifier.padding(start = 10.dp,
+                    top = 5.dp,
+                    bottom = 5.dp))
         }
         if (taskList.isNotEmpty()) {
             items(taskList.size){ index ->
-                TaskCard(navigator,
+                TaskDesktopCard(navigator,
                     statusName = status(taskList[index].status),
                     priorityColor = color(taskList[index].priority),
                     taskData = taskList[index],

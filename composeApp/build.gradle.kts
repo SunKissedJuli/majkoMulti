@@ -151,6 +151,7 @@ compose.desktop {
 
 dependencies {
    implementation(project(":composeApp"))
+    implementation(project(":composeApp"))
     // implementation(project(":composeApp"))
     // implementation(project(":composeApp"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")

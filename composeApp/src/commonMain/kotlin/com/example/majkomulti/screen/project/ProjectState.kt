@@ -5,6 +5,10 @@ import com.example.majkomulti.domain.modelsUI.Project.ProjectDataUi
 data class ProjectState(
     val personalProject : List<ProjectDataUi>? = listOf(),
     val groupProject : List<ProjectDataUi>? = listOf(),
+    val personalActiveProject : List<ProjectDataUi>? = listOf(),
+    val personalDisactiveProject : List<ProjectDataUi>? = listOf(),
+    val groupActiveProject : List<ProjectDataUi>? = listOf(),
+    val groupDisactiveProject : List<ProjectDataUi>? = listOf(),
     val searchPersonalProject : List<ProjectDataUi>? = listOf(),
     val searchGroupProject : List<ProjectDataUi>? = listOf(),
     val searchString: String = DEFAULT_STRING,

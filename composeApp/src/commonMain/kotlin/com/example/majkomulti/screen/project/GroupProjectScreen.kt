@@ -1,4 +1,4 @@
-package com.example.majkomulti.platform.Contents
+package com.example.majkomulti.screen.project
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,34 +26,33 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.example.majkomulti.components.ProjectCard
 import com.example.majkomulti.components.ProjectDesktopCard
 import com.example.majkomulti.components.SearchBox
 import com.example.majkomulti.screen.project.ProjectViewModel
 import com.example.majkomulti.strings.MajkoResourceStrings
 import kotlinx.coroutines.launch
 
-
-internal actual class ProjectScreen : Screen{
+internal class GroupProjectScreen : Screen {
 
     @Composable
     override fun Content() {
         val viewModel = rememberScreenModel { ProjectViewModel() }
         val uiState by viewModel.stateFlow.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
-        val activeProject = uiState.personalActiveProject
-        val disactiveProject = uiState.personalDisactiveProject
+        val activeProject = uiState.groupActiveProject
+        val disactiveProject = uiState.groupDisactiveProject
 
         LaunchedEffect(Unit) {
             launch {
-                viewModel.loadPersonalProjectData()
+                viewModel.loadGroupProjectData()
             }
         }
 
         Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
 
-            Row(Modifier.fillMaxWidth().height(60.dp)
-                    .background(MaterialTheme.colorScheme.onSecondaryContainer),
+            Row(
+                Modifier.fillMaxWidth().height(60.dp)
+                .background(MaterialTheme.colorScheme.onSecondaryContainer),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically) {
                 Row(
@@ -67,7 +66,8 @@ internal actual class ProjectScreen : Screen{
 
             Row(Modifier.fillMaxSize().padding(20.dp)){
                 Column(Modifier.fillMaxHeight().fillMaxWidth(0.5f)) {
-                    LazyColumn(Modifier.fillMaxWidth(),
+                    LazyColumn(
+                        Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(5.dp)) {
 
@@ -97,7 +97,8 @@ internal actual class ProjectScreen : Screen{
                 }
 
                 Column(Modifier.fillMaxSize()) {
-                    LazyColumn(Modifier.fillMaxWidth(),
+                    LazyColumn(
+                        Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(5.dp)) {
 

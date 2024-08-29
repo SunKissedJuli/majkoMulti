@@ -10,6 +10,8 @@ import androidx.compose.ui.graphics.Color
 private val DarkColorPalette = darkColorScheme(
     primary = RoundedButtonColor,
     secondary = Purple,
+    secondaryContainer = PurpleDark,
+    onSecondaryContainer = PurpleLite,
     background = White,
     onSurface = Gray,
     onSecondary = Color.Black,
@@ -23,6 +25,8 @@ private val DarkColorPalette = darkColorScheme(
 private val LightColorPalette = lightColorScheme(
     primary = RoundedButtonColor,
     secondary = Purple,
+    secondaryContainer = PurpleDark,
+    onSecondaryContainer = PurpleLite,
     background = White,
     onSurface = Gray,
     onSecondary = Color.Black,

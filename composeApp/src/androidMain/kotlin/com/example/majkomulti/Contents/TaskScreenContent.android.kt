@@ -1,7 +1,9 @@
 package com.example.majkomulti.platform.Contents
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,14 +32,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.majkomulti.components.AddButton
 import com.example.majkomulti.components.SearchBox
 import com.example.majkomulti.components.TaskCard
+import com.example.majkomulti.images.MajkoResourceImages
 import com.example.majkomulti.screen.task.TaskState
 import com.example.majkomulti.screen.task.TaskViewModel
+import com.example.majkomulti.screen.taskEditor.TaskEditorScreen
+import com.example.majkomulti.strings.MajkoResourceStrings
+import io.github.skeptick.libres.compose.painterResource
 import kotlinx.coroutines.launch
 
 @Composable
@@ -55,9 +64,9 @@ internal actual fun TaskScreenContent(viewModel: TaskViewModel){
         topBar = {
 
             //панель при длинном нажатии
-          // if (uiState.isLongtap) {
-            //    LongTapPanel(viewModel::updateStatus, viewModel::removeTask, uiState, viewModel::updateExpandedLongTap )
-          //  } else {
+           if (uiState.isLongtap) {
+                LongTapPanel(viewModel::updateStatus, viewModel::removeTask, uiState, viewModel::updateExpandedLongTap )
+            } else {
 
                 Row(
                     Modifier
@@ -93,7 +102,7 @@ internal actual fun TaskScreenContent(viewModel: TaskViewModel){
                     }
                 }
             }
-      //  }
+        }
     ){
         Box(
             Modifier
@@ -105,17 +114,18 @@ internal actual fun TaskScreenContent(viewModel: TaskViewModel){
             }
 
             Box(Modifier.align(Alignment.BottomEnd)){
-                AddButton(onClick = {}, id = "0")
+                AddButton(onClick = {navigator.push(TaskEditorScreen())}, id = "0")
             }
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("SuspiciousIndentation")
 @Composable
 private fun SetTaskScreen(viewModel: TaskViewModel, uiState: TaskState, navigator: Navigator) {
-    val allTaskList = uiState.searchAllTaskList
-    val favoritesTaskList = uiState.searchFavoritesTaskList
+    val allTaskList = uiState.allTaskList
+    val favoritesTaskList = uiState.favoritesTaskList
 
     Column(
         Modifier
@@ -181,18 +191,19 @@ private fun SetTaskScreen(viewModel: TaskViewModel, uiState: TaskState, navigato
                         modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp)
                     )
                 }
-                items(allTaskList.size / 2 + allTaskList.size % 2) { rowIndex ->
+                items(allTaskList.size / 2 + allTaskList.size % 2, key = {it}) { rowIndex ->
                     Row(Modifier.fillMaxWidth()) {
                         val firstIndex = rowIndex * 2
                         if (firstIndex < allTaskList.size) {
-                            Column(Modifier.fillMaxWidth(0.5f)) {
+                            Column(Modifier.fillMaxWidth(0.5f).animateItemPlacement()) {
                                 TaskCard(navigator,
                                     statusName = viewModel.getStatus(allTaskList[firstIndex].status),
                                     priorityColor = viewModel.getPriority(allTaskList[firstIndex].priority),
                                     taskData = allTaskList[firstIndex],
                                     onLongTap = { viewModel.openPanel(it) },
                                     onLongTapRelease = { viewModel.openPanel(it) },
-                                    isSelected = uiState.longtapTaskId.contains(allTaskList[firstIndex].id)
+                                    isSelected = uiState.longtapTaskId.contains(allTaskList[firstIndex].id),
+                                    modifier = Modifier.animateItemPlacement()
                                 )
                             }
 
@@ -200,14 +211,15 @@ private fun SetTaskScreen(viewModel: TaskViewModel, uiState: TaskState, navigato
 
                         val secondIndex = firstIndex + 1
                         if (secondIndex < allTaskList.size) {
-                            Column(Modifier.fillMaxWidth()) {
+                            Column(Modifier.fillMaxWidth().animateItemPlacement()) {
                                 TaskCard(navigator,
                                     statusName = viewModel.getStatus(allTaskList[secondIndex].status),
                                     priorityColor = viewModel.getPriority(allTaskList[secondIndex].priority),
                                     taskData = allTaskList[secondIndex],
                                     onLongTap = { viewModel.openPanel(it) },
                                     onLongTapRelease = { viewModel.openPanel(it) },
-                                    isSelected = uiState.longtapTaskId.contains(allTaskList[secondIndex].id)
+                                    isSelected = uiState.longtapTaskId.contains(allTaskList[secondIndex].id),
+                                    modifier = Modifier.animateItemPlacement()
                                 )
                             }
                         }
@@ -219,7 +231,7 @@ private fun SetTaskScreen(viewModel: TaskViewModel, uiState: TaskState, navigato
     }
 }
 
-/*@Composable
+@Composable
 private fun LongTapPanel(onUpdateStatus: ()-> Unit, onRemoveTask: ()-> Unit,
                          uiState: TaskState, onExpandedLongTap: ()->Unit){
     Row(
@@ -232,7 +244,7 @@ private fun LongTapPanel(onUpdateStatus: ()-> Unit, onRemoveTask: ()-> Unit,
 
         Box(Modifier.padding(all = 10.dp)) {
             IconButton(onClick = {onExpandedLongTap() }) {
-                Icon(painter = painterResource(R.drawable.icon_menu),
+                Icon(painter = painterResource(MajkoResourceImages.icon_menu),
                     contentDescription = "", tint = MaterialTheme.colorScheme.background)
             }
             DropdownMenu(
@@ -247,7 +259,7 @@ private fun LongTapPanel(onUpdateStatus: ()-> Unit, onRemoveTask: ()-> Unit,
                             onExpandedLongTap()
                         }) {
                     Text(
-                        stringResource(R.string.task_updatestatus),
+                        MajkoResourceStrings.task_updatestatus,
                         fontSize = 18.sp,
                         modifier = Modifier.padding(all = 10.dp)
                     )
@@ -260,7 +272,7 @@ private fun LongTapPanel(onUpdateStatus: ()-> Unit, onRemoveTask: ()-> Unit,
                             onExpandedLongTap()
                         }) {
                     Text(
-                        stringResource(R.string.project_delite),
+                        MajkoResourceStrings.project_delite,
                         fontSize = 18.sp,
                         modifier = Modifier.padding(all = 10.dp)
                     )
@@ -268,4 +280,4 @@ private fun LongTapPanel(onUpdateStatus: ()-> Unit, onRemoveTask: ()-> Unit,
             }
         }
     }
-}*/
+}

@@ -14,7 +14,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 
 internal class ProjectViewModel : BaseScreenModel<ProjectState, Unit>(ProjectState.InitState()) {
 
-    val projectRepository: ProjectRepository by inject()
+    private val projectRepository: ProjectRepository by inject()
 
     fun updateProjectName(name: String){
 
@@ -44,11 +44,10 @@ internal class ProjectViewModel : BaseScreenModel<ProjectState, Unit>(ProjectSta
 
     }
 
-
     fun updateSearchString(newSearchString:String, whatFilter: Int) = blockingIntent {
         reduce { state.copy(searchString = newSearchString) }
+        loadData(newSearchString)
     }
-
 
     fun updateExpandedFilter(){
 
@@ -83,14 +82,6 @@ internal class ProjectViewModel : BaseScreenModel<ProjectState, Unit>(ProjectSta
         loadGroupProject(search)
     }
 
-    fun loadPersonalProjectData(search: String = ""){
-        loadAllPersonalProject(search)
-    }
-
-    fun loadGroupProjectData(search: String = ""){
-        loadAllGroupProject(search)
-    }
-
     private fun loadPersonalProject(search: String) = intent {
         launchOperation(
             operation = {
@@ -98,44 +89,13 @@ internal class ProjectViewModel : BaseScreenModel<ProjectState, Unit>(ProjectSta
             },
             success = { response ->
                 val validData: MutableList<ProjectDataUi> = mutableListOf()
+                val personalActiveProject: MutableList<ProjectDataUi> = mutableListOf()
+                val personalDisactiveProject: MutableList<ProjectDataUi> = mutableListOf()
                 response.forEach { item ->
                     if (item.isPersonal && item.isArchive==0) {
                         validData.add(item)
                     }
                 }
-                reduceLocal { state.copy(personalProject = validData, searchPersonalProject = validData) }
-            }
-        )
-    }
-
-    private fun loadAllGroupProject(search: String) = intent {
-        launchOperation(
-            operation = {
-                projectRepository.getGroupProject(SearchTask(search))
-            },
-            success = { response ->
-                val groupActiveProject: MutableList<ProjectDataUi> = mutableListOf()
-                val groupDisactiveProject: MutableList<ProjectDataUi> = mutableListOf()
-                response.forEach { item ->
-                    if (!item.isPersonal && item.isArchive==0) {
-                        groupActiveProject.add(item)
-                    }else if(!item.isPersonal && item.isArchive==1){
-                        groupDisactiveProject.add(item)
-                    }
-                }
-                reduceLocal { state.copy(groupActiveProject = groupActiveProject, groupDisactiveProject = groupDisactiveProject) }
-            }
-        )
-    }
-
-    private fun loadAllPersonalProject(search: String) = intent {
-        launchOperation(
-            operation = {
-                projectRepository.getPersonalProject(SearchTask(search))
-            },
-            success = { response ->
-                val personalActiveProject: MutableList<ProjectDataUi> = mutableListOf()
-                val personalDisactiveProject: MutableList<ProjectDataUi> = mutableListOf()
                 response.forEach { item ->
                     if (item.isPersonal && item.isArchive==0) {
                         personalActiveProject.add(item)
@@ -143,11 +103,13 @@ internal class ProjectViewModel : BaseScreenModel<ProjectState, Unit>(ProjectSta
                         personalDisactiveProject.add(item)
                     }
                 }
-                reduceLocal { state.copy(personalActiveProject = personalActiveProject, personalDisactiveProject = personalDisactiveProject) }
+                reduceLocal { state.copy(
+                    personalProject = validData,
+                    personalActiveProject = personalActiveProject,
+                    personalDisactiveProject = personalDisactiveProject) }
             }
         )
     }
-
 
     private fun loadGroupProject(search: String) = intent {
         launchOperation(
@@ -156,12 +118,24 @@ internal class ProjectViewModel : BaseScreenModel<ProjectState, Unit>(ProjectSta
             },
             success = { response ->
                 val validData: MutableList<ProjectDataUi> = mutableListOf()
+                val groupActiveProject: MutableList<ProjectDataUi> = mutableListOf()
+                val groupDisactiveProject: MutableList<ProjectDataUi> = mutableListOf()
                 response.forEach { item ->
                     if (!item.isPersonal && item.isArchive==0) {
                         validData.add(item)
                     }
                 }
-                reduceLocal { state.copy(personalProject = validData, searchPersonalProject = validData) }
+                response.forEach { item ->
+                    if (!item.isPersonal && item.isArchive==0) {
+                        groupActiveProject.add(item)
+                    }else if(!item.isPersonal && item.isArchive==1){
+                        groupDisactiveProject.add(item)
+                    }
+                }
+                reduceLocal { state.copy(
+                    personalProject = validData,
+                    groupActiveProject = groupActiveProject,
+                    groupDisactiveProject = groupDisactiveProject) }
             }
         )
     }

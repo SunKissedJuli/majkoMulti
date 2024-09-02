@@ -11,9 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun BlueRoundedButton(onClick: ()-> Unit, buttonText: String, modifier: Modifier = Modifier, rounded: Int = 30){
     Button(onClick = onClick,

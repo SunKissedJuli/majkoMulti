@@ -9,8 +9,6 @@ data class ProjectState(
     val personalDisactiveProject : List<ProjectDataUi>? = listOf(),
     val groupActiveProject : List<ProjectDataUi>? = listOf(),
     val groupDisactiveProject : List<ProjectDataUi>? = listOf(),
-    val searchPersonalProject : List<ProjectDataUi>? = listOf(),
-    val searchGroupProject : List<ProjectDataUi>? = listOf(),
     val searchString: String = DEFAULT_STRING,
     val isAdding: Boolean = DEFAULT_BOOLEAN,
     val newProjectName : String = DEFAULT_STRING,

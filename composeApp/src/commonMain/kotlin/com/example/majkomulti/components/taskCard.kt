@@ -39,8 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.Navigator
 import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.example.majkomulti.commons.Constantas
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
+import com.example.majkomulti.screen.taskEditor.TaskEditorScreen
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -56,11 +58,12 @@ fun TaskCard(navigator: Navigator,
              onDeadStarClick: (String) -> Unit = {},
              onLongTap: (String) -> Unit = {},
              onLongTapRelease: (String) -> Unit = {},
-             isSelected: Boolean = false){
+             isSelected: Boolean = false,
+             modifier: Modifier = Modifier){
 
     val borderColor = if (isSelected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.background
 
-    Column(modifier = Modifier
+    Column(modifier = modifier
         .height(280.dp)
         .fillMaxWidth()
         .padding(5.dp)
@@ -68,7 +71,7 @@ fun TaskCard(navigator: Navigator,
         .background(color = priorityColor)
         .border(3.dp, color = borderColor, shape = RoundedCornerShape(20.dp))
         .combinedClickable(
-            onClick = {  },
+            onClick = { navigator.push(TaskEditorScreen(taskData.id)) },
             onLongClick = {
                 if (isSelected) {
                     onLongTapRelease(taskData.id)
@@ -88,21 +91,25 @@ fun TaskCard(navigator: Navigator,
             verticalAlignment = Alignment.CenterVertically
         ){
 
-            if(!taskData.creator.get(0).image.isNullOrEmpty()){
-                AsyncImage((Constantas.BASE_URL + taskData.creator.get(0).image),
-                    contentDescription = "",
-                    Modifier
-                        .size(27.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop)
-            }else{
-                Box(
+            SubcomposeAsyncImage((Constantas.BASE_URL + taskData.creator.get(0).image),
+                contentDescription = "",
+                Modifier
+                    .size(27.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop,
+                loading = { Box(
                     Modifier
                         .fillMaxHeight(0.8f)
                         .size(27.dp)
                         .aspectRatio(1f)
-                        .background(MaterialTheme.colorScheme.primary, shape = CircleShape))
-            }
+                        .background(MaterialTheme.colorScheme.primary, shape = CircleShape))},
+                error = { Box(
+                    Modifier
+                        .fillMaxHeight(0.8f)
+                        .size(27.dp)
+                        .aspectRatio(1f)
+                        .background(MaterialTheme.colorScheme.primary, shape = CircleShape))})
+
 
             Spacer(Modifier.width(7.dp))
             Text(text= taskData.title, modifier = Modifier.fillMaxWidth(0.7f), fontSize = 14.sp, fontWeight = FontWeight.Medium, softWrap = true, maxLines = 2)

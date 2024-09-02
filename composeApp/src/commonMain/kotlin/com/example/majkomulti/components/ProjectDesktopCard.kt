@@ -50,12 +50,13 @@ fun ProjectDesktopCard(
     projectData: ProjectDataUi,
     onLongTap: (String) -> Unit = {},
     onLongTapRelease: (String) -> Unit = {},
-    isSelected: Boolean = false
+    isSelected: Boolean = false,
+    modifier: Modifier = Modifier
 ) {
     val borderColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.secondary
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
             .padding(start = 10.dp, top = 10.dp, end = 10.dp)

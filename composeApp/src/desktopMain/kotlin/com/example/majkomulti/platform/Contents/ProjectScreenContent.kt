@@ -46,7 +46,7 @@ internal actual class ProjectScreen : Screen{
 
         LaunchedEffect(Unit) {
             launch {
-                viewModel.loadPersonalProjectData()
+                viewModel.loadData()
             }
         }
 

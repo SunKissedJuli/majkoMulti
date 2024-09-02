@@ -1,6 +1,5 @@
-package com.example.majkomulti.screen.project
+package com.example.majkomulti.screen.group
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,34 +26,35 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.example.majkomulti.components.ProjectDesktopCard
+import com.example.majkomulti.components.GroupCard
+import com.example.majkomulti.components.GroupDesktopCard
 import com.example.majkomulti.components.SearchBox
-import com.example.majkomulti.screen.project.ProjectViewModel
 import com.example.majkomulti.strings.MajkoResourceStrings
 import kotlinx.coroutines.launch
 
+internal class PrivateGroupScreen : Screen {
 
-internal class GroupProjectScreen : Screen {
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun Content() {
-        val viewModel = rememberScreenModel { ProjectViewModel() }
-        val uiState by viewModel.stateFlow.collectAsState()
-        val navigator = LocalNavigator.currentOrThrow
-        val activeProject = uiState.groupActiveProject
-        val disactiveProject = uiState.groupDisactiveProject
 
+        val navigator = LocalNavigator.currentOrThrow
+
+        val viewModel = rememberScreenModel { GroupViewModel() }
         LaunchedEffect(Unit) {
             launch {
                 viewModel.loadData()
             }
         }
 
+        val uiState by viewModel.stateFlow.collectAsState()
+
+        val group = uiState.groupGroup
+
         Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
 
             Row(
                 Modifier.fillMaxWidth().height(60.dp)
-                .background(MaterialTheme.colorScheme.onSecondaryContainer),
+                    .background(MaterialTheme.colorScheme.onSecondaryContainer),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically) {
                 Row(
@@ -62,7 +62,7 @@ internal class GroupProjectScreen : Screen {
                         .background(MaterialTheme.colorScheme.primary),
                     verticalAlignment = Alignment.CenterVertically) {
                     SearchBox(value = uiState.searchString, onValueChange = { viewModel.updateSearchString(it, 2) },
-                        placeholder = MajkoResourceStrings.project_search)
+                        placeholder = MajkoResourceStrings.group_search)
                 }
             }
 
@@ -75,7 +75,7 @@ internal class GroupProjectScreen : Screen {
 
                         item {
                             Text(
-                                text = MajkoResourceStrings.project_active,
+                                text = MajkoResourceStrings.group_group,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.padding(
                                     start = 10.dp,
@@ -84,46 +84,14 @@ internal class GroupProjectScreen : Screen {
                                 )
                             )
                         }
-                        if(!activeProject.isNullOrEmpty()){
-                            items(activeProject, key= {it}){ project ->
-                                ProjectDesktopCard(
+                        if(!group.isNullOrEmpty()){
+                            items(group){ group ->
+                                GroupDesktopCard(
                                     navigator,
-                                    projectData = project,
+                                    groupData = group,
                                     onLongTap = { viewModel.openPanel(it) },
                                     onLongTapRelease = { viewModel.openPanel(it) },
-                                    isSelected = uiState.longtapProjectId.contains(project.id),
-                                    modifier = Modifier.animateItemPlacement()
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Column(Modifier.fillMaxSize()) {
-                    LazyColumn(
-                        Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(5.dp)) {
-
-                        item {
-                            Text(
-                                text = MajkoResourceStrings.project_disactive,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.padding(
-                                    start = 10.dp,
-                                    top = 5.dp,
-                                    bottom = 5.dp
-                                )
-                            )
-                        }
-                        if(!disactiveProject.isNullOrEmpty()){
-                            items(disactiveProject){ project ->
-                                ProjectDesktopCard(
-                                    navigator,
-                                    projectData = project,
-                                    onLongTap = { viewModel.openPanel(it) },
-                                    onLongTapRelease = { viewModel.openPanel(it) },
-                                    isSelected = uiState.longtapProjectId.contains(project.id)
+                                    isSelected = uiState.longtapGroupId.contains(group.id)
                                 )
                             }
                         }

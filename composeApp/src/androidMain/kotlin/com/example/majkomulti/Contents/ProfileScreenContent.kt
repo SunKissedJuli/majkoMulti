@@ -1,6 +1,5 @@
-package com.example.majkomulti.screen.profile
+package com.example.majkomulti.platform.Contents
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,21 +34,20 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import coil3.compose.AsyncImage
 import coil3.compose.SubcomposeAsyncImage
-import com.example.majkomulti.MajkoResource
 import com.example.majkomulti.commons.Constantas
 import com.example.majkomulti.components.BlueRoundedButton
 import com.example.majkomulti.components.LineTextField
 import com.example.majkomulti.images.MajkoResourceImages
+import com.example.majkomulti.screen.RootApp.RootNavigator
 import com.example.majkomulti.screen.login.LoginScreen
-import kotlinx.coroutines.launch
+import com.example.majkomulti.screen.profile.ProfileState
+import com.example.majkomulti.screen.profile.ProfileViewModel
 import io.github.skeptick.libres.compose.painterResource
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
-internal class ProfileScreen: Screen {
+internal actual class ProfileScreen: Screen {
 
     @Composable
     override fun Content() {
@@ -64,7 +62,6 @@ internal class ProfileScreen: Screen {
         val uiState by viewModel.stateFlow.collectAsState()
         val navigator =  LocalNavigator.currentOrThrow
 
-
         Column(
             Modifier
                 .fillMaxSize()
@@ -72,7 +69,7 @@ internal class ProfileScreen: Screen {
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
-            SetProfileScreen(uiState, {viewModel.updateUserName(it)}, {viewModel.updateUserEmail(it)}, viewModel, navigator)
+            SetProfileScreen(uiState, {viewModel.updateUserName(it)}, {viewModel.updateUserEmail(it)}, viewModel)
         }
 
         /*if (uiState.isChangePassword){
@@ -87,30 +84,36 @@ internal class ProfileScreen: Screen {
 
 @Composable
 private fun SetProfileScreen(uiState: ProfileState, onUpdateUserName: (String) -> Unit, onUpdateUserEmail: (String) -> Unit,
-                     viewModel: ProfileViewModel, navigator: Navigator) {
+                             viewModel: ProfileViewModel
+) {
+
+    val navigator = RootNavigator.currentOrThrow
 
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        if(uiState.avatar.isNotEmpty()){
-            SubcomposeAsyncImage(
-               (Constantas.BASE_URL + uiState.avatar),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .clickable { }
-                    .size(200.dp)
-                    .clip(CircleShape)
-            )
-        }else {
-            Box(modifier = Modifier
+        verticalArrangement = Arrangement.Center) {
+
+        SubcomposeAsyncImage(
+            (Constantas.BASE_URL + uiState.avatar),
+            contentDescription = "",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .clickable { }
+                .size(200.dp)
+                .clip(CircleShape),
+            loading = { Box(modifier = Modifier
                 .clickable { }
                 .size(200.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary))
-        }
+            },
+            error = { Box(modifier = Modifier
+                .clickable { }
+                .size(200.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary))
+            })
     }
 
     Spacer(modifier = Modifier.height(20.dp))
@@ -122,7 +125,8 @@ private fun SetProfileScreen(uiState: ProfileState, onUpdateUserName: (String) -
             placeholder = "имя", modifier = Modifier.width(150.dp))
 
         IconButton(onClick = { viewModel.updateNameData(uiState.userName)}) {
-            Icon(painterResource(MajkoResourceImages.icon_check), contentDescription = "",
+            Icon(
+                painterResource(MajkoResourceImages.icon_check), contentDescription = "",
                 tint = MaterialTheme.colorScheme.primary)
         }
     }
@@ -140,7 +144,8 @@ private fun SetProfileScreen(uiState: ProfileState, onUpdateUserName: (String) -
         }
     }
 
-    Row(Modifier
+    Row(
+        Modifier
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.Bottom){
@@ -148,7 +153,8 @@ private fun SetProfileScreen(uiState: ProfileState, onUpdateUserName: (String) -
             modifier = Modifier.padding(bottom = 10.dp, top = 20.dp))
     }
 
-    Row(Modifier
+    Row(
+        Modifier
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.Bottom) {
@@ -157,7 +163,7 @@ private fun SetProfileScreen(uiState: ProfileState, onUpdateUserName: (String) -
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.clickable {
                 viewModel.forgetAccount()
-                navigator.push(LoginScreen())
+                navigator.replaceAll(LoginScreen())
             })
     }
 }
@@ -195,4 +201,3 @@ private fun ChangePassword(uiState: ProfileState,onUpdateOldPassword: (String) -
         }
     }
 }*/
-

@@ -48,20 +48,27 @@ class MainVerticalTabScreen() : Screen {
     override fun Content() {
         TabNavigator(TaskTab, disposeNestedNavigators = true) { tab ->
             var isPersonal by remember{mutableStateOf(true)}
-
+            val tabNavigator = LocalTabNavigator.current
             Row(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.secondary)) {
-                // Left Navigation Bar
-                Column(
-                    modifier = Modifier
-                        .width(250.dp) // Set the width of the left bar
-                        .fillMaxHeight(),
-                  //  verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
+
+                Column(modifier = Modifier
+                        .width(250.dp)
+                        .fillMaxHeight()) {
+
                     TabNavItem(MyTaskTab)
                     TabNavItem(ProfileTab)
                     HorizontalLine(Modifier.padding(start = 10.dp, end = 10.dp, bottom = 0.dp).alpha(0.5f))
-                    PersonalGroupButtons(isPersonal) { isPersonal = !isPersonal }
-
+                    PersonalGroupButtons(isPersonal) {
+                        isPersonal = !isPersonal
+                        when(tabNavigator.current){
+                            is PersonalTaskTab -> { tabNavigator.current = GroupTaskTab }
+                            is PersonalProjectTab -> { tabNavigator.current = GroupProjectTab }
+                            is PersonalGroupTab -> { tabNavigator.current = GroupGroupTab }
+                            is GroupTaskTab -> { tabNavigator.current = PersonalTaskTab }
+                            is GroupProjectTab -> { tabNavigator.current = PersonalProjectTab }
+                            is GroupGroupTab -> { tabNavigator.current = PersonalGroupTab }
+                        }
+                    }
 
                     if(isPersonal){
                         TabNavItem(PersonalTaskTab)
@@ -74,12 +81,9 @@ class MainVerticalTabScreen() : Screen {
                         TabNavItem(GroupGroupTab)
                     }
                     HorizontalLine(Modifier.padding(start = 10.dp, end = 10.dp).alpha(0.5f))
-
                 }
 
-                // Main Content Area
-                Box(modifier = Modifier
-                    .fillMaxSize()) {
+                Box(modifier = Modifier.fillMaxSize()) {
                     tab.current.Content()
                 }
             }

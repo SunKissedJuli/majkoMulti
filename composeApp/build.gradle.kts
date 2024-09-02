@@ -52,7 +52,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.libres.compose)
-
             implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
             //coil
@@ -133,6 +132,7 @@ android {
         compose = true
     }
     dependencies {
+      //  implementation(project(":composeApp"))
         debugImplementation(compose.uiTooling)
     }
 }
@@ -150,10 +150,7 @@ compose.desktop {
 }
 
 dependencies {
-   implementation(project(":composeApp"))
-    implementation(project(":composeApp"))
-    // implementation(project(":composeApp"))
-    // implementation(project(":composeApp"))
+  //  implementation(project(":composeApp"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
     val ktorfitVersion = libs.versions.ktorfit.asProvider().get()
     add("kspCommonMainMetadata", "de.jensklingenberg.ktorfit:ktorfit-ksp:$ktorfitVersion")

@@ -6,8 +6,10 @@ import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
 data class TaskState(
     val allTaskList: List<TaskDataUi>? = listOf(),
     val favoritesTaskList: List<TaskDataUi>? = listOf(),
-    val searchAllTaskList: List<TaskDataUi>? = listOf(),
-    val searchFavoritesTaskList: List<TaskDataUi>? = listOf(),
+    val personalFavoritesTaskList: List<TaskDataUi>? = listOf(),
+    val personalAllTaskList: List<TaskDataUi>? = listOf(),
+    val groupAllTaskList: List<TaskDataUi>? = listOf(),
+    val groupFavoritesTaskList: List<TaskDataUi>? = listOf(),
     val statuses: List<InfoUi> = listOf(),
     val searchString: String = DEFAULT_STRING,
     val isError: Boolean = DEFAULT_BOOLEAN,

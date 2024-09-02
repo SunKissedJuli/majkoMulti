@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.example.majkomulti.platform.BaseScreenModel
 import com.example.majkomulti.data.models.Task.SearchTask
+import com.example.majkomulti.data.models.Task.TaskByIdUnderscore
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
 import com.example.majkomulti.domain.repository.InfoRepository
 import com.example.majkomulti.domain.repository.TaskRepository
@@ -15,17 +16,27 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 
 internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitState()) {
 
-    val taskRepository: TaskRepository by inject()
-    val infoRepository: InfoRepository by inject()
+    private val taskRepository: TaskRepository by inject()
+    private val infoRepository: InfoRepository by inject()
 
     fun updateSearchString(newSearchString: String, whatFilter: Int) = blockingIntent {
         reduce {
             state.copy(searchString = newSearchString)
         }
+        loadAllTask(newSearchString)
     }
 
-    fun openPanel(id: String) {
-
+    fun openPanel(id: String)  = blockingIntent {
+        val idLength = 36
+        val currentIds = state.longtapTaskId.chunked(idLength)
+        val updatedIds = if (currentIds.contains(id)) {
+            currentIds.filter { it != id }
+        } else {
+            currentIds + id
+        }.joinToString("")
+        reduce {
+            state.copy(isLongtap = updatedIds.isNotEmpty(), longtapTaskId = updatedIds)
+        }
     }
 
     @Composable
@@ -50,19 +61,28 @@ internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitSt
         return ""
     }
 
-
-
-
     fun updateExpandedFilter(){
 
     }
 
-    fun updateExpandedLongTap(){
-
+    fun updateExpandedLongTap() = blockingIntent{
+        if(state.expandedLongTap){
+            reduce { state.copy(expandedLongTap = false) }
+        }else{
+            reduce { state.copy(expandedLongTap = true) }
+        }
     }
 
     fun filterByStatus(status: Int): List<TaskDataUi> {
-        return state.searchAllTaskList?.filter { it.status == status } ?: emptyList()
+        return state.allTaskList?.filter { it.status == status } ?: emptyList()
+    }
+
+    fun filterByStatusPersonal(status: Int): List<TaskDataUi> {
+        return state.personalAllTaskList?.filter { it.status == status } ?: emptyList()
+    }
+
+    fun filterByStatusGroup(status: Int): List<TaskDataUi> {
+        return state.groupAllTaskList?.filter { it.status == status } ?: emptyList()
     }
 
     fun loadData() {
@@ -80,6 +100,10 @@ internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitSt
             success = { response ->
                 val fav: MutableList<TaskDataUi> = mutableListOf()
                 val notFavorite: MutableList<TaskDataUi> = mutableListOf()
+                val favPersonal: MutableList<TaskDataUi> = mutableListOf()
+                val notFavoritePersonal: MutableList<TaskDataUi> = mutableListOf()
+                val favGroup: MutableList<TaskDataUi> = mutableListOf()
+                val notFavoriteGroup: MutableList<TaskDataUi> = mutableListOf()
                 response.forEach { item ->
                     if (!item.isFavorite) {
                         notFavorite.add(item)
@@ -87,14 +111,33 @@ internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitSt
                         fav.add(item)
                     }
                 }
+                response.forEach { item ->
+                    if(item.isPersonal){
+                        if (!item.isFavorite) {
+                            notFavoritePersonal.add(item)
+                        }else if(item.isFavorite){
+                            favPersonal.add(item)
+                        }
+                    }
+                }
+                response.forEach { item ->
+                    if(!item.isPersonal){
+                        if (!item.isFavorite) {
+                            notFavoriteGroup.add(item)
+                        }else if(item.isFavorite){
+                            favGroup.add(item)
+                        }
+                    }
+                }
+
                 reduceLocal {
                     state.copy( allTaskList = notFavorite.sortedBy { it.status },
-                        searchAllTaskList = notFavorite.sortedBy { it.status },
                         favoritesTaskList = fav.sortedBy { it.status },
-                        searchFavoritesTaskList = fav.sortedBy { it.status })
+                        personalAllTaskList = notFavoritePersonal.sortedBy { it.status },
+                        personalFavoritesTaskList = favPersonal.sortedBy { it.status },
+                        groupAllTaskList = notFavoriteGroup.sortedBy { it.status },
+                        groupFavoritesTaskList = favGroup.sortedBy { it.status })
                 }
-            },
-            failure = {
             }
         )
     }
@@ -130,7 +173,22 @@ internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitSt
 
     }
 
-    fun removeTask() {
+    fun removeTask() = intent {
+        val projectIds = state.longtapTaskId.chunked(36)
+        projectIds.mapNotNull { id ->
+            val task = state.allTaskList?.find { it.id == id }
+                ?: state.favoritesTaskList?.find { it.id == id }
+
+            task?.let {
+                val removeTask = TaskByIdUnderscore(it.id)
+                launchOperation(
+                    operation = {
+                        taskRepository.removeTask(removeTask)
+                    },
+                    success = { loadData() }
+                )
+            }
+        }
     }
 
     fun updateStatus() {

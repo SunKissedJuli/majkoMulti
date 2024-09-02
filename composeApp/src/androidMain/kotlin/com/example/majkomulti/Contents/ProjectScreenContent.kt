@@ -146,8 +146,8 @@ internal actual class ProjectScreen : Screen {
 
 @Composable
 private fun SetProjectScreen(uiState: ProjectState, navigator: Navigator, viewModel: ProjectViewModel) {
-    val personalProject = uiState.searchPersonalProject
-    val groupProject = uiState.searchGroupProject
+    val personalProject = uiState.personalProject
+    val groupProject = uiState.groupProject
 
     Column(Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start,

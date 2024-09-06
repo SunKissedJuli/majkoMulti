@@ -7,6 +7,12 @@ import com.example.majkomulti.domain.repository.InfoRepository
 import com.example.majkomulti.platform.Either
 import com.example.majkomulti.platform.Failure
 import com.example.majkomulti.platform.apiCall
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 
 
 class InfoRepositoryImpl (private val majkoApi: MajkoApi): InfoRepository {
@@ -23,6 +29,28 @@ class InfoRepositoryImpl (private val majkoApi: MajkoApi): InfoRepository {
             majkoApi.getPriorities()
         },
             mapResponse = { info -> info.toUI() })
+    }
+
+    override suspend fun uploadFile(taskId: String, files: File): Either<Failure, Unit> {
+        // Проверка существования и доступности файла
+        if (!files.exists() || !files.canRead()) {
+            return Either.Left(Failure.Http(422,"File not here"))
+        }
+
+        // Проверка на пустой файл
+        if (files.length() == 0L) {
+            return Either.Left(Failure.Http(422,"File empty"))
+        }
+
+        // Создание MultipartBody.Part для файла
+        val filePart = MultipartBody.Part.createFormData("files", files.name,
+            files.asRequestBody("application/octet-stream".toMediaTypeOrNull()))
+
+        println("!!!!!!!!!!!!!!!!!!!сам файл: ${files.name}, путь: ${files.absolutePath}")
+
+        return apiCall(call = {
+            majkoApi.uploadFile(taskId, filePart)
+        }, mapResponse = { Unit })
     }
 
 }

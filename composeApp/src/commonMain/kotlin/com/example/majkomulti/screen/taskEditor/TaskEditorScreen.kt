@@ -11,9 +11,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +39,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,6 +51,8 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import coil3.compose.SubcomposeAsyncImage
+import com.example.majkomulti.commons.Constantas
 import com.example.majkomulti.components.BlueRoundedButton
 import com.example.majkomulti.components.ButtonBack
 import com.example.majkomulti.components.DeadlineDatePicker
@@ -84,8 +92,11 @@ class TaskEditorScreen(val taskId: String = "0") : Screen {
                     navigator.pop()})
         }
 
-        SetTaskEditorScreen(uiState, {viewModel.updateTaskText(it)},
-            { viewModel.updateTaskName(it) }, viewModel, navigator)
+        Column(Modifier.fillMaxWidth().height(10000.dp).background(uiState.backgroundColor)){
+            SetTaskEditorScreen(uiState, {viewModel.updateTaskText(it)},
+                { viewModel.updateTaskName(it) }, viewModel, navigator)
+        }
+
 
     }
 }
@@ -132,6 +143,17 @@ private fun SetTaskEditorScreen(uiState: TaskEditorState, onUpdateTaskText: (Str
                             Text(MajkoResourceStrings.project_delite, fontSize=18.sp, color = MaterialTheme.colorScheme.onSecondary,
                                 modifier = Modifier.padding(all = 10.dp))
                         }
+
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    viewModel.addFile()
+                                    viewModel.updateExpanded()
+                                }){
+                            Text(MajkoResourceStrings.common_file, fontSize=18.sp, color = MaterialTheme.colorScheme.onSecondary,
+                                modifier = Modifier.padding(all = 10.dp))
+                        }
                     }
                 }
             }
@@ -139,7 +161,8 @@ private fun SetTaskEditorScreen(uiState: TaskEditorState, onUpdateTaskText: (Str
     ) {
         Column(
             Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .heightIn(max = 10000.dp)
                 .verticalScroll(rememberScrollState())
                 .background(uiState.backgroundColor)
                 .padding(it)) {
@@ -173,6 +196,40 @@ private fun SetTaskEditorScreen(uiState: TaskEditorState, onUpdateTaskText: (Str
 
             //отображается только при редактировании, при добавлении таски нельзя добавить субтаску или задачу
             if(!uiState.taskId.equals("0")){
+                LazyVerticalGrid(columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxWidth().heightIn(max = 10000.dp).padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (uiState.taskFiles.isNotEmpty()) {
+                        items(uiState.taskFiles) { file ->
+                            SubcomposeAsyncImage(Constantas.BASE_URL + file.link,
+                                contentDescription = "", modifier = Modifier.height(120.dp).width(120.dp)
+                                    .fillMaxWidth().clip(RoundedCornerShape(10.dp)),
+                                contentScale = ContentScale.Crop,
+                                error = {
+                                    if (file.link.endsWith(".pdf")) {
+                                        Row(
+                                            Modifier.height(120.dp).width(120.dp)
+                                                .clip(RoundedCornerShape(10.dp))
+                                                .background(
+                                                    MaterialTheme.colorScheme.primary,
+                                                    shape = RoundedCornerShape(10.dp)
+                                                ),
+                                            horizontalArrangement = Arrangement.Center,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(
+                                                text = MajkoResourceStrings.common_pdf,
+                                                color = Color.White,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
+                                })
+                            Spacer(Modifier.width(10.dp))
+                        }
+                    }
+                }
                 Column(verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.Start) {
                     Column(Modifier.padding(start = 20.dp, top = 20.dp, end = 20.dp)) {
                         Row(
@@ -295,6 +352,11 @@ private fun SetTaskEditorScreen(uiState: TaskEditorState, onUpdateTaskText: (Str
                     HorizontalLine()
                 }
             }
+
+            if(uiState.subtask.isNullOrEmpty()){
+                Column(Modifier.height(500.dp).fillMaxWidth().background(uiState.backgroundColor)){}
+            }
+
         }
     }
 

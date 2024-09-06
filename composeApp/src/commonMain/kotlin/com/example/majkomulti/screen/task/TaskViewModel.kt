@@ -1,20 +1,31 @@
 package com.example.majkomulti.screen.task
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import com.example.majkomulti.components.SpinnerItems
 import com.example.majkomulti.platform.BaseScreenModel
 import com.example.majkomulti.data.models.Task.SearchTask
+import com.example.majkomulti.data.models.Task.TaskById
 import com.example.majkomulti.data.models.Task.TaskByIdUnderscore
+import com.example.majkomulti.data.models.Task.TaskUpdateData
+import com.example.majkomulti.data.models.UploadFiles
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
 import com.example.majkomulti.domain.repository.InfoRepository
 import com.example.majkomulti.domain.repository.TaskRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
+import java.io.File
+import javax.swing.JFileChooser
 
-internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitState()) {
+internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.InitState()) {
 
     private val taskRepository: TaskRepository by inject()
     private val infoRepository: InfoRepository by inject()
@@ -50,6 +61,45 @@ internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitSt
         }
     }
 
+    fun getPriority() : List<SpinnerItems>{
+        val list = mutableListOf<SpinnerItems>()
+        if (!state.priorities.isNullOrEmpty()) {
+            for (propriety in state.priorities!!) {
+                list.add(SpinnerItems(propriety.id.toString(), propriety.name))
+            }
+        }
+        return list
+    }
+
+    fun getStatusName(statusId: Int): String {
+        return if (!state.statuses.isNullOrEmpty()) {
+            state.statuses.find { it.id == statusId }?.name ?: ""
+        } else {
+            ""
+        }
+    }
+
+    fun getStatus() : List<SpinnerItems>{
+        val list = mutableListOf<SpinnerItems>()
+        if (!state.statuses.isNullOrEmpty()) {
+            for (status in state.statuses!!) {
+                list.add(SpinnerItems(status.id.toString(), status.name))
+            }
+        }
+        return list
+    }
+
+    fun getPriorityName(priorityId: Int) : String{
+        if(!state.priorities.isNullOrEmpty()){
+            for(item in state.priorities!!){
+                if(item.id==priorityId){
+                    return item.name
+                }
+            }
+        }
+        return ""
+    }
+
     fun getStatus(statusId: Int): String {
         if (!state.statuses.isNullOrEmpty()) {
             for (item in state.statuses!!) {
@@ -63,6 +113,14 @@ internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitSt
 
     fun updateExpandedFilter(){
 
+    }
+
+    fun updateTitle(title: String) = blockingIntent {
+        reduce { state.copy(taskData = state.taskData.copy(title = title)) }
+    }
+
+    fun updateText(text: String) = blockingIntent {
+        reduce { state.copy(taskData = state.taskData.copy(text = text)) }
     }
 
     fun updateExpandedLongTap() = blockingIntent{
@@ -87,6 +145,10 @@ internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitSt
 
     fun loadData() {
         loadAllTask("")
+    }
+
+    fun loadSubData(){
+        loadPriorities()
         loadStatuses()
     }
 
@@ -142,35 +204,98 @@ internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitSt
         )
     }
 
-    private fun loadFavTask(search: String) {
-
-    }
-
-    private fun loadEachTask(search: String) {
-
-    }
-
-    private fun loadStatuses()= intent {
+    private fun loadStatuses() = intent {
         launchOperation(
             operation = {
                 infoRepository.getStatuses()
             },
             success = { response ->
                 reduceLocal {
-                    state.copy( statuses = response,)
+                    state.copy( statuses = response)
                 }
-            },
-            failure = {
             }
         )
     }
 
-    fun addFavotite(task_id: String) {
-
+    private fun loadPriorities()= intent {
+        launchOperation(
+            operation = {
+                infoRepository.getPriorities()
+            },
+            success = { response ->
+                reduceLocal {
+                    state.copy(priorities = response)}
+            }
+        )
     }
 
-    fun removeFavotite(task_id: String) {
+    fun addFavotite(task_id: String) = intent {
+        launchOperation(
+            operation = {
+                taskRepository.addToFavorite(TaskById(task_id))
+            },
+            success = {loadData() }
+        )
+    }
 
+    fun removeFavotite(task_id: String)  = intent {
+        launchOperation(
+            operation = {
+                taskRepository.removeFavotire(TaskById(task_id))
+            },
+            success = {loadData() }
+        )
+    }
+
+    fun openDesktopPanel(taskId: String) = blockingIntent {
+        reduce { state.copy(isTask = !state.isTask) }
+        if(state.isTask){
+            loadTask(taskId)
+        }
+        else{
+            updateTask()
+        }
+    }
+
+    fun loadTask(taskId: String) = intent{
+        launchOperation(
+            operation = {
+                taskRepository.getTaskById(TaskById(taskId))
+            },
+            success = { response ->
+                reduceLocal { state.copy(taskData = response) }
+            }
+        )
+    }
+
+    fun updateTask() = intent {
+        val task = TaskUpdateData(taskId = state.taskData.id, title = state.taskData.title, text=state.taskData.text,
+            priorityId = state.taskData.priority, deadline = state.taskData.deadline, statusId = state.taskData.status)
+        launchOperation(
+            operation = {
+                taskRepository.updateTask(task)
+            },
+            success = {loadData()}
+        )
+    }
+
+    fun openFile() {
+        val fileChooser = JFileChooser()
+        val returnValue = fileChooser.showOpenDialog(null)
+
+       if (returnValue == JFileChooser.APPROVE_OPTION) {
+           println("!!!!!!!!!!!!!!!!!!!имя выбранного файла: " + fileChooser.selectedFile.name)
+           addFile(fileChooser.selectedFile)
+        }
+    }
+
+    fun addFile(file: File) = intent {
+       launchOperation(
+            operation = {
+                infoRepository.uploadFile(taskId = state.taskData.id, files = file)
+            },
+            success = {loadData()}
+        )
     }
 
     fun removeTask() = intent {
@@ -189,6 +314,16 @@ internal class TaskViewModel : BaseScreenModel<TaskState, Unit>(TaskState.InitSt
                 )
             }
         }
+    }
+
+    fun updateTaskPriority(prioryti: String) {
+        blockingIntent {
+            reduce { state.copy(taskData = state.taskData.copy(priority = prioryti.toInt())) }
+        }
+    }
+
+    fun updateTaskStatus(status:String) = blockingIntent {
+        reduce { state.copy(taskData = state.taskData.copy(status = status.toInt())) }
     }
 
     fun updateStatus() {

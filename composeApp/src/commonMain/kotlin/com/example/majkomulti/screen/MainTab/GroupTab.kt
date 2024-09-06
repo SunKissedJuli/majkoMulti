@@ -1,18 +1,19 @@
 package com.example.majkomulti.screen.MainTab
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.Group
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.majkomulti.images.MajkoResourceImages
-import com.example.majkomulti.platform.Contents.ProjectScreen
+import com.example.majkomulti.platform.Contents.GroupScreen
 import io.github.skeptick.libres.compose.painterResource
 
 object GroupTab: Tab {
 
     @Composable
     override fun Content() {
-        Navigator(ProjectScreen())
+        Navigator(GroupScreen())
     }
 
     override val options: TabOptions

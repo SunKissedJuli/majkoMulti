@@ -26,7 +26,6 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.example.majkomulti.components.ProjectCard
 import com.example.majkomulti.components.ProjectDesktopCard
 import com.example.majkomulti.components.SearchBox
 import com.example.majkomulti.screen.project.ProjectViewModel

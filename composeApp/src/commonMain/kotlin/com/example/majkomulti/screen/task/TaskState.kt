@@ -11,6 +11,7 @@ data class TaskState(
     val groupAllTaskList: List<TaskDataUi>? = listOf(),
     val groupFavoritesTaskList: List<TaskDataUi>? = listOf(),
     val statuses: List<InfoUi> = listOf(),
+    val priorities: List<InfoUi> = listOf(),
     val searchString: String = DEFAULT_STRING,
     val isError: Boolean = DEFAULT_BOOLEAN,
     val errorMessage: Int? = null,
@@ -20,6 +21,8 @@ data class TaskState(
     val longtapTaskId: String = DEFAULT_STRING,
     val expandedFilter: Boolean = DEFAULT_BOOLEAN,
     val expandedLongTap: Boolean = DEFAULT_BOOLEAN,
+    val taskData: TaskDataUi = TaskDataUi.empty(),
+    val isTask: Boolean = DEFAULT_BOOLEAN
 ){
     companion object {
         const val DEFAULT_STRING = ""

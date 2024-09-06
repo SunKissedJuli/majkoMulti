@@ -36,12 +36,13 @@ kotlin {
         
         androidMain.dependencies {
             implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+            implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
            // implementation(libs.kotlinx.coroutines.swing)
            // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
+           
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
@@ -88,12 +89,14 @@ kotlin {
 
             implementation(libs.russhwolf.settings)
 
+            //okhttp (было в десктопе)
+            implementation("com.squareup.okhttp3:okhttp:4.11.0")
+            implementation(libs.ktor.client.okhttp)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
-            implementation("com.squareup.okhttp3:okhttp:4.11.0")
-            implementation(libs.ktor.client.okhttp)
+
            // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.9.0-RC.2")
         }
     }

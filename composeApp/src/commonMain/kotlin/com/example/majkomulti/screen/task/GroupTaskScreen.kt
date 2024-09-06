@@ -29,7 +29,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.majkomulti.components.LazyTaskColumn
 import com.example.majkomulti.components.SearchBox
 import com.example.majkomulti.components.TaskDesktopCard
-import com.example.majkomulti.platform.Contents.TaskScreenContent
 import com.example.majkomulti.strings.MajkoResourceStrings
 import kotlinx.coroutines.launch
 
@@ -81,7 +80,7 @@ class GroupTaskScreen : Screen {
                         ) {
                             item {
                                 Text(
-                                    text = "Избранные",
+                                    text =  MajkoResourceStrings.status_fav,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.padding(
                                         start = 10.dp,
@@ -93,7 +92,7 @@ class GroupTaskScreen : Screen {
                             if (favoritesTaskList != null) {
                                 items(favoritesTaskList.size) { index ->
                                     TaskDesktopCard(
-                                        navigator,
+                                        {viewModel.openDesktopPanel(it)},
                                         statusName = viewModel.getStatus(favoritesTaskList[index].status),
                                         priorityColor = viewModel.getPriority(favoritesTaskList[index].priority),
                                         taskData = favoritesTaskList[index],
@@ -105,45 +104,25 @@ class GroupTaskScreen : Screen {
                             }
                         }
 
-                        LazyTaskColumn(viewModel.filterByStatusGroup(1),
-                            uiState,
-                            navigator,
-                            viewModel::getStatus,
-                            { viewModel.getPriority(it) },
-                            "Без статуса"
-                        )
+                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(1), uiState, navigator,
+                            viewModel::getStatus, { viewModel.getPriority(it) },  onBurnStarClick = { viewModel.removeFavotite(it) },
+                            onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_no)
 
-                        LazyTaskColumn(viewModel.filterByStatusGroup(2),
-                            uiState,
-                            navigator,
-                            viewModel::getStatus,
-                            { viewModel.getPriority(it) },
-                            "Обсуждается"
-                        )
+                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(2), uiState, navigator,
+                            viewModel::getStatus, { viewModel.getPriority(it) }, onBurnStarClick = { viewModel.removeFavotite(it) },
+                            onDeadStarClick = { viewModel.addFavotite(it) },  MajkoResourceStrings.status_discus)
 
-                        LazyTaskColumn(viewModel.filterByStatusGroup(3),
-                            uiState,
-                            navigator,
-                            viewModel::getStatus,
-                            { viewModel.getPriority(it) },
-                            "Ожидает"
-                        )
+                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(3), uiState, navigator,
+                            viewModel::getStatus, { viewModel.getPriority(it) }, onBurnStarClick = { viewModel.removeFavotite(it) },
+                            onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_wait)
 
-                        LazyTaskColumn(viewModel.filterByStatusGroup(4),
-                            uiState,
-                            navigator,
-                            viewModel::getStatus,
-                            { viewModel.getPriority(it) },
-                            "В процессе"
-                        )
+                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(4), uiState, navigator,
+                            viewModel::getStatus, { viewModel.getPriority(it) },  onBurnStarClick = { viewModel.removeFavotite(it) },
+                            onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_process)
 
-                        LazyTaskColumn(viewModel.filterByStatusGroup(5),
-                            uiState,
-                            navigator,
-                            viewModel::getStatus,
-                            { viewModel.getPriority(it) },
-                            "Завершена"
-                        )
+                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(5), uiState, navigator,
+                            viewModel::getStatus, { viewModel.getPriority(it) }, onBurnStarClick = { viewModel.removeFavotite(it) },
+                            onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_finish)
 
                     }
                 }

@@ -245,6 +245,9 @@ internal class TaskEditorViewModel: BaseScreenModel<TaskEditorState,Unit>(TaskEd
         }
     }
 
+    fun addFile(){
+    }
+
     fun loadData(taskId: String, colorScheme: ColorScheme) = intent {
         reduce { state.copy(taskId = taskId) }
         if(!taskId.equals("0")){
@@ -264,7 +267,8 @@ internal class TaskEditorViewModel: BaseScreenModel<TaskEditorState,Unit>(TaskEd
                         taskStatus = response.status,
                         taskPriority = response.priority,
                         taskProjectObj = response.project,
-                        taskProject = response.project.id
+                        taskProject = response.project.id,
+                        taskFiles = response.files
                     ) }
 
                     updateTaskPriority(response.priority.toString(), colorScheme)
@@ -286,8 +290,9 @@ internal class TaskEditorViewModel: BaseScreenModel<TaskEditorState,Unit>(TaskEd
                 infoRepository.getStatuses()
             },
             success = { response ->
-                reduceLocal { state.copy(statuses = response,
-                    taskStatusName = getStatusName(state.taskStatus)) }
+                reduceLocal { state.copy(statuses = response)}
+                reduceLocal {
+                    state.copy(taskStatusName = getStatusName(state.taskStatus)) }
             }
         )
     }
@@ -298,8 +303,11 @@ internal class TaskEditorViewModel: BaseScreenModel<TaskEditorState,Unit>(TaskEd
                 infoRepository.getPriorities()
             },
             success = { response ->
-                reduceLocal { state.copy(proprieties = response,
-                    taskPriorityName = getPriorityName(state.taskPriority)) }
+                reduceLocal {
+                    state.copy(proprieties = response)}
+                reduceLocal {
+                    state.copy(taskPriorityName = getPriorityName(state.taskPriority))
+                }
             }
         )
     }

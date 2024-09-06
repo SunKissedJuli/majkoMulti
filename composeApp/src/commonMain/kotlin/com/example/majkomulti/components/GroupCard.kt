@@ -52,7 +52,7 @@ fun GroupCard(navigator: Navigator,
 
     Column(modifier = Modifier
         .fillMaxWidth()
-        .height(150.dp)
+        .height(170.dp)
         .padding(start = 10.dp, top = 10.dp, end = 10.dp)
         .clip(RoundedCornerShape(20.dp))
         .background(color = priorityColor)
@@ -111,12 +111,13 @@ fun GroupCard(navigator: Navigator,
         Row(
             Modifier
                 .fillMaxSize()
-                .padding(end = 15.dp, bottom = 15.dp),
+                .padding(end = 15.dp, bottom = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End) {
 
             Image(painter = painterResource(MajkoResourceImages.icon_members),
                 contentDescription = "")
+            Spacer(modifier = Modifier.width(3.dp))
             Text(text = groupData.members.size.toString())
 
         }

@@ -1,6 +1,7 @@
 package com.example.majkomulti.domain.repository
 
 import com.example.majkomulti.data.models.User.UserUpdateEmail
+import com.example.majkomulti.data.models.User.UserUpdateImage
 import com.example.majkomulti.data.models.User.UserUpdateName
 import com.example.majkomulti.data.models.User.UserUpdatePassword
 import com.example.majkomulti.data.models.UserSignIn.UserSignInData
@@ -11,6 +12,7 @@ import com.example.majkomulti.domain.modelsUI.UserLogin.UserSignUpDataUi
 import com.example.majkomulti.platform.Either
 import com.example.majkomulti.platform.Failure
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 interface UserRepository {
 
@@ -25,5 +27,8 @@ interface UserRepository {
     suspend fun updateUserEmail(user: UserUpdateEmail): Either<Failure, CurrentUserDataUi>
 
     suspend fun updateUserPassword(user: UserUpdatePassword): Either<Failure, CurrentUserDataUi>
+
+    suspend fun updateUserImage(user: String, file: File):  Either<Failure, CurrentUserDataUi>
+
 
 }

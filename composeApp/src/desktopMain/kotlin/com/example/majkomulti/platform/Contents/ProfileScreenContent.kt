@@ -99,7 +99,7 @@ private fun SetProfileScreen(uiState: ProfileState, onUpdateUserName: (String) -
             contentDescription = "",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .clickable { }
+                .clickable { viewModel.openFile() }
                 .size(200.dp)
                 .clip(CircleShape),
             loading = { Box(modifier = Modifier

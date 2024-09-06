@@ -1,4 +1,5 @@
 package com.example.majkomulti.di
+import com.example.majkomulti.platform.permission.platformPermissionsModule
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -13,7 +14,8 @@ object KoinInjector {
                 preferencesModule,
                 apiModule,
                 managerModule,
-                repositoryModule
+                repositoryModule,
+                platformPermissionsModule
             )
         )
 

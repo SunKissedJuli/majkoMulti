@@ -20,6 +20,14 @@
     <string name="taskeditor_add">Добавить запись</string>
     <string name="task_favorites">Избранные</string>
     <string name="task_each">Другие</string>
+    <string name="task_autor">Автор</string>
+    <string name="task_project">Проект</string>
+    <string name="task_data">Дата создания</string>
+    <string name="task_deadline">Дата завершения</string>
+    <string name="task_prioritet">Приоритет</string>
+    <string name="task_status">Статус</string>
+
+
     <string name="task_search">Искать в задачах</string>
     <string name="task_updatestatus">Завершить задачи</string>
     <string name="project_search">Искать в проектах</string>
@@ -105,4 +113,12 @@
     <string name="common_group_project">Групповые проекты</string>
     <string name="common_personal_group">Личные группы</string>
     <string name="common_group_group">Общие группые</string>
+    <string name="status_fav">Избранные</string>
+    <string name="status_wait">Ожидает</string>
+    <string name="status_discus">Обсуждается</string>
+    <string name="status_finish">Завершено</string>
+    <string name="status_process">В процессе</string>
+    <string name="status_no">Без статуса</string>
+    <string name="common_pdf">.PDF</string>
+    <string name="common_file">Добавить файл</string>
 </resources>

@@ -66,64 +66,63 @@ internal actual class ProjectScreen : Screen {
         val uiState by viewModel.stateFlow.collectAsState()
         Scaffold(
             topBar = {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(65.dp)
-                            .padding(all = 10.dp)
-                            .clip(RoundedCornerShape(30.dp))
-                            .background(color = MaterialTheme.colorScheme.primary),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(65.dp)
+                        .padding(all = 10.dp)
+                        .clip(RoundedCornerShape(30.dp))
+                        .background(color = MaterialTheme.colorScheme.primary),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
-                        SearchBox(uiState.searchString, { viewModel.updateSearchString(it, 2) }, MajkoResourceStrings.project_search)
+                    SearchBox(uiState.searchString, { viewModel.updateSearchString(it, 2) }, MajkoResourceStrings.project_search)
 
-                        Column {
-                            Row {
-                                IconButton(onClick = { viewModel.updateExpandedFilter() }, Modifier.size(27.dp)) {
-                                    Icon(painter = painterResource(MajkoResourceImages.icon_filter),
-                                        contentDescription = "", tint = MaterialTheme.colorScheme.background)
-                                }
-                            }
-                            FilterDropdown(expanded = uiState.expandedFilter,
-                                onDismissRequest = { viewModel.updateExpandedFilter() }, MajkoResourceStrings.filter_project_group,
-                                { viewModel.updateSearchString(uiState.searchString, it) },
-                                MajkoResourceStrings.filter_group_personal, MajkoResourceStrings.filter_all)
-                        }
-
-                        Spacer(modifier = Modifier.width(5.dp))
-
-                        IconButton(onClick = { viewModel.updateSearchString(uiState.searchString, 2) }, Modifier.size(27.dp)) {
-                            Icon(painter = painterResource(MajkoResourceImages.icon_filter_off),
-                                contentDescription = "", tint = MaterialTheme.colorScheme.background)
-                        }
-
-                        Box(Modifier.padding(end = 10.dp)) {
-                            IconButton(onClick = { viewModel.updateExpanded() }) {
-                                Icon(painter = painterResource(MajkoResourceImages.icon_menu),
+                    Column {
+                        Row {
+                            IconButton(onClick = { viewModel.updateExpandedFilter() }, Modifier.size(27.dp)) {
+                                Icon(painter = painterResource(MajkoResourceImages.icon_filter),
                                     contentDescription = "", tint = MaterialTheme.colorScheme.background)
                             }
-                            DropdownMenu(
-                                expanded = uiState.expanded,
-                                onDismissRequest = { viewModel.updateExpanded() },
-                                modifier = Modifier.fillMaxWidth(0.5f)
-                            ) {
+                        }
+                        FilterDropdown(expanded = uiState.expandedFilter,
+                            onDismissRequest = { viewModel.updateExpandedFilter() }, MajkoResourceStrings.filter_project_group,
+                            { viewModel.updateSearchString(uiState.searchString, it) },
+                            MajkoResourceStrings.filter_group_personal, MajkoResourceStrings.filter_all)
+                    }
 
-                                Row(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .clickable { viewModel.openInviteWindow()
-                                            viewModel.updateExpanded()}) {
-                                    Text(
-                                        MajkoResourceStrings.project_joininvite,
-                                        fontSize = 18.sp,
-                                        modifier = Modifier.padding(all = 10.dp)
-                                    )
-                                }
+                    Spacer(modifier = Modifier.width(5.dp))
+
+                    IconButton(onClick = { viewModel.updateSearchString(uiState.searchString, 2) }, Modifier.size(27.dp)) {
+                        Icon(painter = painterResource(MajkoResourceImages.icon_filter_off),
+                            contentDescription = "", tint = MaterialTheme.colorScheme.background)
+                    }
+
+                    Box(Modifier.padding(end = 10.dp)) {
+                        IconButton(onClick = { viewModel.updateExpanded() }) {
+                            Icon(painter = painterResource(MajkoResourceImages.icon_menu),
+                                contentDescription = "", tint = MaterialTheme.colorScheme.background)
+                        }
+                        DropdownMenu(
+                            expanded = uiState.expanded,
+                            onDismissRequest = { viewModel.updateExpanded() },
+                            modifier = Modifier.fillMaxWidth(0.5f)
+                        ) {
+
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { viewModel.openInviteWindow()
+                                        viewModel.updateExpanded()}) {
+                                Text(
+                                    MajkoResourceStrings.project_joininvite,
+                                    fontSize = 18.sp,
+                                    modifier = Modifier.padding(all = 10.dp)
+                                )
                             }
                         }
                     }
-
+                }
             }
         ) {
             Box(

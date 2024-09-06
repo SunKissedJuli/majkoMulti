@@ -18,11 +18,14 @@ import com.example.majkomulti.screen.task.TaskState
 
 @Composable
 fun LazyTaskColumn(
+    onClick: (String) -> Unit = {},
     taskList: List<TaskDataUi>,
     uiState: TaskState,
     navigator: Navigator,
     status: (Int)-> String,
     color: @Composable (Int)-> Color,
+    onBurnStarClick: (String) -> Unit = {},
+    onDeadStarClick: (String) -> Unit = {},
     text: String){
     Spacer(Modifier.width(15.dp))
 
@@ -38,14 +41,17 @@ fun LazyTaskColumn(
                     bottom = 5.dp))
         }
         if (taskList.isNotEmpty()) {
-            items(taskList.size){ index ->
-                TaskDesktopCard(navigator,
-                    statusName = status(taskList[index].status),
-                    priorityColor = color(taskList[index].priority),
-                    taskData = taskList[index],
+            animatedItems(taskList){ it ->
+                TaskDesktopCard(
+                    onClick = onClick,
+                    statusName = status(it.status),
+                    priorityColor = color(it.priority),
+                    taskData = it,
+                    onBurnStarClick = onBurnStarClick,
+                    onDeadStarClick = onDeadStarClick,
                     onLongTap = { },
                     onLongTapRelease = { },
-                    isSelected = uiState.longtapTaskId.contains(taskList[index].id))
+                    isSelected = uiState.longtapTaskId.contains(it.id))
             }
         }
     }

@@ -56,6 +56,7 @@ private fun provideHttpClient(
 
     defaultRequest {
         header("Content-Type", "application/json")
+      //  header("Content-Type", "multipart/form-data")
     }
 
 

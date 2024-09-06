@@ -7,7 +7,6 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,16 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.example.majkomulti.MajkoResource
 import com.example.majkomulti.screen.register.RegistrationScreen
 import com.example.majkomulti.screen.splash.SplashEvent
 import com.example.majkomulti.screen.splash.SplashViewModel
-import com.example.majkomulti.screen.task.TaskScreen
 import com.example.majkomulti.strings.MajkoResourceStrings
 import kotlinx.coroutines.launch
-import com.example.majkomulti.images.MajkoResourceImages
 import com.example.majkomulti.screen.MainVerticalTab.MainVerticalTabScreen
-import io.github.skeptick.libres.compose.painterResource
 
 @Composable
 internal actual fun SplashScreenContent(viewModel: SplashViewModel) {

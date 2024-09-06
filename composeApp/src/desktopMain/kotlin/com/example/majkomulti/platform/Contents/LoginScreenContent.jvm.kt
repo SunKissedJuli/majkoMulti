@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +29,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.majkomulti.components.BlueRoundedButton
 import com.example.majkomulti.components.LineTextField
-import com.example.majkomulti.images.MajkoResourceImages
 import com.example.majkomulti.screen.login.LoginEvent
 import com.example.majkomulti.screen.login.LoginViewModel
 import com.example.majkomulti.screen.register.RegistrationScreen

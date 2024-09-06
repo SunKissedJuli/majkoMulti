@@ -46,19 +46,21 @@ import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TaskDesktopCard(navigator: Navigator,
-             priorityColor : Color = MaterialTheme.colorScheme.background,
-             statusName : String,
-             taskData: TaskDataUi,
-             onBurnStarClick: (String) -> Unit = {},
-             onDeadStarClick: (String) -> Unit = {},
-             onLongTap: (String) -> Unit = {},
-             onLongTapRelease: (String) -> Unit = {},
-             isSelected: Boolean = false){
+fun TaskDesktopCard(
+    onClick: (String) -> Unit = {},
+    priorityColor : Color = MaterialTheme.colorScheme.background,
+    statusName : String,
+    taskData: TaskDataUi,
+    onBurnStarClick: (String) -> Unit = {},
+    onDeadStarClick: (String) -> Unit = {},
+    onLongTap: (String) -> Unit = {},
+    onLongTapRelease: (String) -> Unit = {},
+    isSelected: Boolean = false,
+    modifier: Modifier = Modifier){
 
     val borderColor = if (isSelected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.background
 
-    Column(modifier = Modifier
+    Column(modifier = modifier
         .height(280.dp)
         .fillMaxWidth()
         .padding(5.dp)
@@ -66,7 +68,7 @@ fun TaskDesktopCard(navigator: Navigator,
         .background(color = priorityColor)
         .border(3.dp, color = borderColor, shape = RoundedCornerShape(20.dp))
         .combinedClickable(
-            onClick = {  },
+            onClick = { onClick(taskData.id) },
             onLongClick = {
                 if (isSelected) {
                     onLongTapRelease(taskData.id)

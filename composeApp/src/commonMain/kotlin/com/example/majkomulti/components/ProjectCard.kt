@@ -58,11 +58,7 @@ fun ProjectCard(
             .height(170.dp)
             .padding(start = 10.dp, top = 10.dp, end = 10.dp)
             .clip(RoundedCornerShape(20.dp))
-            .border(
-                3.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(20.dp)
-            )
+            .border(3.dp, color = borderColor, shape = RoundedCornerShape(20.dp))
             .background(color = priorityColor)
             .combinedClickable(
                 onClick = {  },
@@ -75,16 +71,13 @@ fun ProjectCard(
                 },
             ),
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Row(
-            Modifier
-                .padding(start = 15.dp, top = 10.dp, end = 10.dp)
-                .fillMaxWidth()
-                .fillMaxHeight(0.27f),
+        verticalArrangement = Arrangement.Top) {
+        Row(Modifier
+            .padding(start = 15.dp, top = 10.dp, end = 10.dp)
+            .fillMaxWidth()
+            .fillMaxHeight(0.27f),
             horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+            verticalAlignment = Alignment.CenterVertically) {
 
             SubcomposeAsyncImage((Constantas.BASE_URL + projectData.author.image),
                 contentDescription = "",
@@ -105,40 +98,29 @@ fun ProjectCard(
                         .aspectRatio(1f)
                         .background(MaterialTheme.colorScheme.primary, shape = CircleShape))})
 
-        }
             Spacer(Modifier.width(15.dp))
-            Text(
-                text = projectData.name,
-                modifier = Modifier.fillMaxWidth(0.7f),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                softWrap = true,
-                maxLines = 2
-            )
+            Text(text = projectData.name, modifier = Modifier.fillMaxWidth(0.7f),
+                fontSize = 14.sp, fontWeight = FontWeight.Medium,
+                softWrap = true, maxLines = 2)
         }
-        Row(
-            Modifier
-                .padding(start = 15.dp, top = 10.dp, end = 10.dp)
-                .fillMaxWidth()
-                .fillMaxHeight(0.7f),
+
+
+        Row(Modifier
+            .padding(start = 15.dp, top = 10.dp, end = 10.dp)
+            .fillMaxWidth()
+            .fillMaxHeight(0.7f),
             horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.Top
-        ) {
-            Text(
-                text = projectData.description,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Light,
-                softWrap = true,
-                maxLines = 4
-            )
+            verticalAlignment = Alignment.Top) {
+
+            Text(text = projectData.description, fontSize = 13.sp,
+                fontWeight = FontWeight.Light, softWrap = true, maxLines = 4)
         }
-        Row(
-            Modifier
-                .fillMaxSize()
-                .padding(end = 15.dp, bottom = 10.dp),
+        Row(Modifier
+            .fillMaxSize()
+            .padding(end = 15.dp, bottom = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End
-        ) {
+            horizontalArrangement = Arrangement.End) {
+
             if (!projectData.isPersonal) {
                 Image(painterResource(MajkoResourceImages.icon_members), contentDescription = "")
                 Spacer(modifier = Modifier.width(3.dp))
@@ -146,3 +128,4 @@ fun ProjectCard(
             }
         }
     }
+}

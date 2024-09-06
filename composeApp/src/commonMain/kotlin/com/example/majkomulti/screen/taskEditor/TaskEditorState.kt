@@ -5,6 +5,7 @@ import com.example.majkomulti.domain.modelsUI.InfoUi
 import com.example.majkomulti.domain.modelsUI.Note.NoteDataUi
 import com.example.majkomulti.domain.modelsUI.Project.ProjectDataUi
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
+import com.example.majkomulti.domain.modelsUI.UploadFilesUi
 
 data class TaskEditorState(
     val taskText: String = DEFAULT_STRING,
@@ -17,6 +18,7 @@ data class TaskEditorState(
     val taskProject: String = DEFAULT_STRING,
     val taskProjectObj: ProjectDataUi = ProjectDataUi.empty(),
     val taskId: String = DEFAULT_TASK_ID,
+    val taskFiles: List<UploadFilesUi> = emptyList(),
     val backgroundColor: Color = DEFAULT_BACKGROUND_COLOR,
     val noteText: String = DEFAULT_STRING,
     val newNote: Boolean = DEFAULT_BOOLEAN,

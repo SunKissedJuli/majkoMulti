@@ -26,9 +26,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.example.majkomulti.components.GroupCard
 import com.example.majkomulti.components.GroupDesktopCard
-import com.example.majkomulti.components.ProjectDesktopCard
 import com.example.majkomulti.components.SearchBox
 import com.example.majkomulti.screen.group.GroupViewModel
 import com.example.majkomulti.strings.MajkoResourceStrings

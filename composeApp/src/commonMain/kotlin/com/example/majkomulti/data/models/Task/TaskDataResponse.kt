@@ -1,6 +1,7 @@
 package com.example.majkomulti.data.models.Task
 
 import com.example.majkomulti.data.models.ProjectData.ProjectDataResponse
+import com.example.majkomulti.data.models.UploadFiles
 import com.example.majkomulti.data.models.User.CurrentUserDataResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -24,5 +25,6 @@ data class TaskDataResponse(
     @SerialName("count_notes") val countNotes: Int?,
     @SerialName("count_files") val countFiles: Int?,
     @SerialName("is_favorite") val isFavorite: Boolean?,
-    @SerialName("project") val project: ProjectDataResponse?
+    @SerialName("project") val project: ProjectDataResponse?,
+    @SerialName("files") val files: List<UploadFiles>?,
 )

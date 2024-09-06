@@ -27,7 +27,8 @@ fun TaskDataResponse.toUI(): TaskDataUi {
         countNotes = this.countNotes ?: 0,
         countFiles = this.countFiles ?: 0,
         isFavorite = this.isFavorite ?: false,
-        project = this.project?.toUI()?: ProjectDataUi.empty()
+        project = this.project?.toUI()?: ProjectDataUi.empty(),
+        files = this.files?.map { it.toUI() } ?: emptyList()
     )
 }
 

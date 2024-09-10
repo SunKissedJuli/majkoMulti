@@ -26,25 +26,18 @@ fun SimpleTextField(
     modifier: Modifier = Modifier,
     style: TextStyle = TextStyle(),
     placeholderStyle: TextStyle = TextStyle(
-        color = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium)
-    )
-) {
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium))) {
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .padding(vertical = 10.dp),
             textStyle = style,
             decorationBox = { innerTextField ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     if (value.isEmpty()) {
-                        Text(
-                            text = placeholder,
-                            style = placeholderStyle
-                        )
+                        Text(text = placeholder, style = placeholderStyle)
                     }
                     innerTextField()
                 }

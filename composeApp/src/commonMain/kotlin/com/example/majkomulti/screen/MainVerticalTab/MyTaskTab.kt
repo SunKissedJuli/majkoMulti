@@ -7,7 +7,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.majkomulti.images.MajkoResourceImages
 import com.example.majkomulti.strings.MajkoResourceStrings
 import io.github.skeptick.libres.compose.painterResource
-import com.example.majkomulti.platform.Contents.TaskScreen
+import com.example.majkomulti.screen.task.TaskScreen
 
 object MyTaskTab: Tab {
 

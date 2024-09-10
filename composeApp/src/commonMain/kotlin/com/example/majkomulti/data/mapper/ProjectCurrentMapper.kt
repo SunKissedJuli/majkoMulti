@@ -26,7 +26,7 @@ fun ProjectCurrentResponse.toUI(): ProjectCurrentUi {
         isPersonal = this.isPersonal ?: false,
         countFiles = this.countFiles ?: 0,
         tasks = this.tasks?.map { it.toUI() } ?: emptyList(),
-       // groups = this.groups?.map { it.toUI() } ?: emptyList(),
+     //   groups = this.groups?.map { it.toUI() } ?: emptyList(),
         groups = emptyList(),
         files = this.files?.map { it.toUI() } ?: emptyList()
     )

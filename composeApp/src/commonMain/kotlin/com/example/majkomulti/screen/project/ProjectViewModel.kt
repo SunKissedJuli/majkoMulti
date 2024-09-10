@@ -107,7 +107,8 @@ internal class ProjectViewModel : BaseScreenModel<ProjectState, Unit>(ProjectSta
                     personalProject = validData,
                     personalActiveProject = personalActiveProject,
                     personalDisactiveProject = personalDisactiveProject) }
-            }
+            },
+            loading = {setStatus(false)}
         )
     }
 
@@ -133,10 +134,12 @@ internal class ProjectViewModel : BaseScreenModel<ProjectState, Unit>(ProjectSta
                     }
                 }
                 reduceLocal { state.copy(
-                    personalProject = validData,
+                    groupProject = validData,
                     groupActiveProject = groupActiveProject,
                     groupDisactiveProject = groupDisactiveProject) }
-            }
+
+            },
+            loading = {setStatus(false)}
         )
     }
 }

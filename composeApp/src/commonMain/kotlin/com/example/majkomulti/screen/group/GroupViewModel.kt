@@ -92,7 +92,8 @@ internal class GroupViewModel: BaseScreenModel<GroupState, Unit>(GroupState.Init
                 }
                 reduceLocal { state.copy(groupGroup = validData) }
 
-            }
+            },
+            loading = {setStatus(false)}
         )
     }
 
@@ -109,8 +110,8 @@ internal class GroupViewModel: BaseScreenModel<GroupState, Unit>(GroupState.Init
                     }
                 }
                 reduceLocal { state.copy(personalGroup = validData) }
-
-            }
+            },
+            loading = {setStatus(false)}
         )
     }
 

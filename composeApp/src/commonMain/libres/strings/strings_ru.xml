@@ -26,8 +26,6 @@
     <string name="task_deadline">Дата завершения</string>
     <string name="task_prioritet">Приоритет</string>
     <string name="task_status">Статус</string>
-
-
     <string name="task_search">Искать в задачах</string>
     <string name="task_updatestatus">Завершить задачи</string>
     <string name="project_search">Искать в проектах</string>

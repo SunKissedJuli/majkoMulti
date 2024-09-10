@@ -43,7 +43,6 @@ import io.github.skeptick.libres.compose.painterResource
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProjectCard(
-    navigator: Navigator,
     priorityColor: Color = MaterialTheme.colorScheme.background,
     projectData: ProjectDataUi,
     onLongTap: (String) -> Unit = {},
@@ -79,25 +78,7 @@ fun ProjectCard(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
 
-            SubcomposeAsyncImage((Constantas.BASE_URL + projectData.author.image),
-                contentDescription = "",
-                Modifier
-                    .size(25.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop,
-                loading = {  Box(
-                    Modifier
-                        .fillMaxHeight(0.8f)
-                        .size(25.dp)
-                        .aspectRatio(1f)
-                        .background(MaterialTheme.colorScheme.primary, shape = CircleShape))},
-                error ={  Box(
-                    Modifier
-                        .fillMaxHeight(0.8f)
-                        .size(25.dp)
-                        .aspectRatio(1f)
-                        .background(MaterialTheme.colorScheme.primary, shape = CircleShape))})
-
+            CircleAsyncImage(projectData.author.image,27)
             Spacer(Modifier.width(15.dp))
             Text(text = projectData.name, modifier = Modifier.fillMaxWidth(0.7f),
                 fontSize = 14.sp, fontWeight = FontWeight.Medium,

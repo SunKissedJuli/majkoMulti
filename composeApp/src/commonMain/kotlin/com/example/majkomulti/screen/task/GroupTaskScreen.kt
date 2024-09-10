@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.majkomulti.components.LazyTaskColumn
 import com.example.majkomulti.components.SearchBox
 import com.example.majkomulti.components.TaskDesktopCard
+import com.example.majkomulti.components.animatedItems
 import com.example.majkomulti.strings.MajkoResourceStrings
 import kotlinx.coroutines.launch
 
@@ -37,7 +39,6 @@ class GroupTaskScreen : Screen {
     override fun Content() {
         val viewModel = rememberScreenModel { TaskViewModel() }
         val uiState by viewModel.stateFlow.collectAsState()
-        val navigator = LocalNavigator.currentOrThrow
         val favoritesTaskList = uiState.groupFavoritesTaskList
 
         LaunchedEffect(Unit) {
@@ -53,17 +54,13 @@ class GroupTaskScreen : Screen {
                     Modifier.fillMaxWidth().height(60.dp)
                         .background(MaterialTheme.colorScheme.onSecondaryContainer),
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                    verticalAlignment = Alignment.CenterVertically) {
                     Row(
                         Modifier.fillMaxWidth(0.5f).height(40.dp).clip(RoundedCornerShape(30.dp))
                         .background(MaterialTheme.colorScheme.primary),
                         verticalAlignment = Alignment.CenterVertically){
-                        // if(!uiState.allTaskList.isNullOrEmpty()){
-                        SearchBox(uiState.searchString, { viewModel.updateSearchString(it, 2) },
-                            placeholder = MajkoResourceStrings.task_search
-                        )
-                        // }
+
+                        SearchBox(uiState.searchString, { viewModel.updateSearchString(it) }, placeholder = MajkoResourceStrings.task_search)
                     }
 
                 }
@@ -89,41 +86,39 @@ class GroupTaskScreen : Screen {
                                     )
                                 )
                             }
-                            if (favoritesTaskList != null) {
-                                items(favoritesTaskList.size) { index ->
-                                    TaskDesktopCard(
-                                        {viewModel.openDesktopPanel(it)},
-                                        statusName = viewModel.getStatus(favoritesTaskList[index].status),
-                                        priorityColor = viewModel.getPriority(favoritesTaskList[index].priority),
-                                        taskData = favoritesTaskList[index],
-                                        onLongTap = { viewModel.openPanel(it) },
-                                        onLongTapRelease = { viewModel.openPanel(it) },
-                                        isSelected = uiState.longtapTaskId.contains(favoritesTaskList[index].id)
-                                    )
-                                }
+
+                            animatedItems(favoritesTaskList) { favTask ->
+                                TaskDesktopCard(
+                                    {viewModel.openDesktopPanel(it)},
+                                    statusName = viewModel.getStatus(favTask.status),
+                                    priorityColor = viewModel.getPriority(favTask.priority),
+                                    taskData = favTask,
+                                    onLongTap = { viewModel.openPanel(it) },
+                                    onLongTapRelease = { viewModel.openPanel(it) },
+                                    isSelected = uiState.longtapTaskId.contains(favTask.id)
+                                )
                             }
                         }
 
-                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(1), uiState, navigator,
+                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(1), uiState,
                             viewModel::getStatus, { viewModel.getPriority(it) },  onBurnStarClick = { viewModel.removeFavotite(it) },
                             onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_no)
 
-                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(2), uiState, navigator,
+                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(2), uiState,
                             viewModel::getStatus, { viewModel.getPriority(it) }, onBurnStarClick = { viewModel.removeFavotite(it) },
                             onDeadStarClick = { viewModel.addFavotite(it) },  MajkoResourceStrings.status_discus)
 
-                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(3), uiState, navigator,
+                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(3), uiState,
                             viewModel::getStatus, { viewModel.getPriority(it) }, onBurnStarClick = { viewModel.removeFavotite(it) },
                             onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_wait)
 
-                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(4), uiState, navigator,
+                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(4), uiState,
                             viewModel::getStatus, { viewModel.getPriority(it) },  onBurnStarClick = { viewModel.removeFavotite(it) },
                             onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_process)
 
-                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(5), uiState, navigator,
+                        LazyTaskColumn({viewModel.openDesktopPanel(it)}, viewModel.filterByStatusGroup(5), uiState,
                             viewModel::getStatus, { viewModel.getPriority(it) }, onBurnStarClick = { viewModel.removeFavotite(it) },
                             onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_finish)
-
                     }
                 }
             }

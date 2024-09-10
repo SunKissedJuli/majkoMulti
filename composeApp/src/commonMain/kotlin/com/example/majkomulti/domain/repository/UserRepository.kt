@@ -28,7 +28,7 @@ interface UserRepository {
 
     suspend fun updateUserPassword(user: UserUpdatePassword): Either<Failure, CurrentUserDataUi>
 
-    suspend fun updateUserImage(user: String, file: File):  Either<Failure, CurrentUserDataUi>
+    suspend fun updateUserImage(name: String, image: String):  Either<Failure, CurrentUserDataUi>
 
 
 }

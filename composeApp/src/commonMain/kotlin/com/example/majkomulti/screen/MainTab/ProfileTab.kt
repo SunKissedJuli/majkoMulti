@@ -6,7 +6,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.majkomulti.images.MajkoResourceImages
 import io.github.skeptick.libres.compose.painterResource
-import com.example.majkomulti.platform.Contents.ProfileScreen
+import com.example.majkomulti.screen.profile.ProfileScreen
 
 object ProfileTab: Tab {
 

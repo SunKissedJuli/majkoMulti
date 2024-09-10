@@ -5,7 +5,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.majkomulti.images.MajkoResourceImages
-import com.example.majkomulti.platform.Contents.GroupScreen
+import com.example.majkomulti.screen.group.GroupScreen
 import com.example.majkomulti.strings.MajkoResourceStrings
 import io.github.skeptick.libres.compose.painterResource
 

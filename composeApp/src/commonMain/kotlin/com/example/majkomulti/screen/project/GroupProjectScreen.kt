@@ -40,7 +40,6 @@ internal class GroupProjectScreen : Screen {
     override fun Content() {
         val viewModel = rememberScreenModel { ProjectViewModel() }
         val uiState by viewModel.stateFlow.collectAsState()
-        val navigator = LocalNavigator.currentOrThrow
         val activeProject = uiState.groupActiveProject
         val disactiveProject = uiState.groupDisactiveProject
 
@@ -84,17 +83,15 @@ internal class GroupProjectScreen : Screen {
                                 )
                             )
                         }
-                        if(!activeProject.isNullOrEmpty()){
-                            items(activeProject, key= {it}){ project ->
-                                ProjectDesktopCard(
-                                    navigator,
-                                    projectData = project,
-                                    onLongTap = { viewModel.openPanel(it) },
-                                    onLongTapRelease = { viewModel.openPanel(it) },
-                                    isSelected = uiState.longtapProjectId.contains(project.id),
-                                    modifier = Modifier.animateItemPlacement()
-                                )
-                            }
+
+                        items(activeProject, key= {it}){ project ->
+                            ProjectDesktopCard(
+                                projectData = project,
+                                onLongTap = { viewModel.openPanel(it) },
+                                onLongTapRelease = { viewModel.openPanel(it) },
+                                isSelected = uiState.longtapProjectId.contains(project.id),
+                                modifier = Modifier.animateItemPlacement()
+                            )
                         }
                     }
                 }
@@ -116,21 +113,17 @@ internal class GroupProjectScreen : Screen {
                                 )
                             )
                         }
-                        if(!disactiveProject.isNullOrEmpty()){
-                            items(disactiveProject){ project ->
-                                ProjectDesktopCard(
-                                    navigator,
-                                    projectData = project,
-                                    onLongTap = { viewModel.openPanel(it) },
-                                    onLongTapRelease = { viewModel.openPanel(it) },
-                                    isSelected = uiState.longtapProjectId.contains(project.id)
-                                )
-                            }
+                        items(disactiveProject){ project ->
+                            ProjectDesktopCard(
+                                projectData = project,
+                                onLongTap = { viewModel.openPanel(it) },
+                                onLongTapRelease = { viewModel.openPanel(it) },
+                                isSelected = uiState.longtapProjectId.contains(project.id)
+                            )
                         }
                     }
                 }
             }
-
         }
     }
 }

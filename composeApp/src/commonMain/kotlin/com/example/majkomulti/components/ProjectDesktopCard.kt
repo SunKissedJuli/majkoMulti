@@ -45,7 +45,6 @@ import java.util.Locale
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProjectDesktopCard(
-    navigator: Navigator,
     priorityColor: Color = MaterialTheme.colorScheme.background,
     projectData: ProjectDataUi,
     onLongTap: (String) -> Unit = {},
@@ -88,21 +87,8 @@ fun ProjectDesktopCard(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if(!projectData.author.image.isNullOrEmpty()){
-                AsyncImage((Constantas.BASE_URL + projectData.author.image),
-                    contentDescription = "",
-                    Modifier
-                        .size(25.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop)
-            }else{
-                Box(
-                    Modifier
-                        .fillMaxHeight(0.8f)
-                        .size(25.dp)
-                        .aspectRatio(1f)
-                        .background(MaterialTheme.colorScheme.primary, shape = CircleShape))
-            }
+            CircleAsyncImage(projectData.author.image,27)
+
             Spacer(Modifier.width(15.dp))
             Text(
                 text = projectData.name,

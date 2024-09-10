@@ -19,12 +19,3 @@ fun ButtonBack(onClick: ()-> Unit = {}){
             tint = MaterialTheme.colorScheme.background)
     }
 }
-
-@Composable
-fun ButtonBackWithArgunemt(onClick: (String)-> Unit = {}){
-    IconButton(onClick = {onClick("")}, modifier = Modifier.width(80.dp).padding(top = 10.dp)) {
-        Icon(painter = painterResource(MajkoResourceImages.icon_back), modifier = Modifier.size(80.dp),
-            contentDescription = "",
-            tint = MaterialTheme.colorScheme.onSurface)
-    }
-}

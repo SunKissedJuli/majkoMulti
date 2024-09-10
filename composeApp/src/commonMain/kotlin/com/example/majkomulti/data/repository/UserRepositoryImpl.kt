@@ -15,6 +15,8 @@ import com.example.majkomulti.domain.modelsUI.UserLogin.UserSignUpDataUi
 import com.example.majkomulti.domain.repository.UserRepository
 import com.example.majkomulti.platform.Either
 import com.example.majkomulti.platform.Failure
+import com.example.majkomulti.platform.Form
+import com.example.majkomulti.platform.MultipartManager
 import com.example.majkomulti.platform.apiCall
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -22,7 +24,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
-class UserRepositoryImpl (private val majkoApi: MajkoApi): UserRepository {
+class UserRepositoryImpl (private val majkoApi: MajkoApi, private val multipartManager: MultipartManager): UserRepository {
 
     override suspend fun signIn(user: UserSignInData): Either<Failure, UserSignInDataUi> {
         return apiCall(call = {
@@ -66,21 +68,15 @@ class UserRepositoryImpl (private val majkoApi: MajkoApi): UserRepository {
             mapResponse = { userData -> userData.toUI() })
     }
 
-    override suspend fun updateUserImage(user: String, file: File): Either<Failure, CurrentUserDataUi> {
+    override suspend fun updateUserImage(user: String, image: String): Either<Failure, CurrentUserDataUi> {
         return apiCall(call = {
-            val mimeType = when {
-                file.name.endsWith(".png") -> "image/png"
-                file.name.endsWith(".jpg") || file.name.endsWith(".jpeg") -> "image/jpeg"
-                file.name.endsWith(".gif") -> "image/gif"
-                else -> "application/octet-stream"
+            val list =  buildList<Form> {
+                add(Form.FormBody("name", user))
+                add(Form.FormFile("image", image))
             }
 
-            val filePart = MultipartBody.Part.createFormData(
-                "image",
-                file.name,
-                file.asRequestBody(mimeType.toMediaTypeOrNull())
-            )
-            majkoApi.updateUserImage(user, filePart)
+            val body = multipartManager.createMultipart(list)
+            majkoApi.updateUserImage(body)
         }, mapResponse = { userData -> userData.toUI() })
     }
 }

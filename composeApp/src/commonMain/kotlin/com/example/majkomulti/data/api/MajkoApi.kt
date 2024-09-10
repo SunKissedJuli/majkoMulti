@@ -37,16 +37,12 @@ import com.example.majkomulti.data.models.UsrtSignUp.UserSignUpData
 import com.example.majkomulti.data.models.UsrtSignUp.UserSignUpDataResponse
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
-import de.jensklingenberg.ktorfit.http.HEAD
 import de.jensklingenberg.ktorfit.http.HTTP
-import de.jensklingenberg.ktorfit.http.Header
-import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.Multipart
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Part
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.File
 
 interface MajkoApi {
     //юзер
@@ -68,9 +64,15 @@ interface MajkoApi {
     @POST("api/user/update")
     suspend fun updateUserPassword(@Body user: UserUpdatePassword): CurrentUserDataResponse
 
-    @Multipart
+  /*  @Multipart
     @POST("api/user/update")
     suspend fun updateUserImage(@Part("name") name: String, @Part("image") image : MultipartBody.Part): CurrentUserDataResponse
+*/
+
+    @Multipart
+    @POST("api/user/update")
+    suspend fun updateUserImage(@Body body: MultiPartFormDataContent): CurrentUserDataResponse
+
 
     //таски
     @POST("api/task/allUserTasks")

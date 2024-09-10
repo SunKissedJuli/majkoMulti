@@ -3,12 +3,12 @@ package com.example.majkomulti.screen.group
 import com.example.majkomulti.domain.modelsUI.Group.GroupUi
 
 data class GroupState(
-    val personalGroup : List<GroupUi>? = listOf(),
-    val groupGroup : List<GroupUi>? = listOf(),
-    val personalActiveGroup : List<GroupUi>? = listOf(),
-    val groupActiveGroup : List<GroupUi>? = listOf(),
-    val personalDisactiveGroup : List<GroupUi>? = listOf(),
-    val groupDesactiveGroup : List<GroupUi>? = listOf(),
+    val personalGroup : List<GroupUi> = emptyList(),
+    val groupGroup : List<GroupUi> = emptyList(),
+    val personalActiveGroup : List<GroupUi> = emptyList(),
+    val groupActiveGroup : List<GroupUi> = emptyList(),
+    val personalDisactiveGroup : List<GroupUi> = emptyList(),
+    val groupDesactiveGroup : List<GroupUi> = emptyList(),
     val searchString: String = DEFAULT_STRING,
     val isAdding: Boolean = DEFAULT_BOOLEAN,
     val newGroupName : String = DEFAULT_STRING,

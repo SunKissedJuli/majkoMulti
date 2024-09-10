@@ -2,6 +2,7 @@ package com.example.majkomulti.data.models.User
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.io.File
 
 @Serializable
 data class UserUpdateEmail(
@@ -14,9 +15,10 @@ data class UserUpdateName(
     @SerialName("name") val name : String?,
 )
 
-@Serializable
+
 data class UserUpdateImage(
-    @SerialName("name") val name : String?
+    val name : String,
+    val image : String,
 )
 
 @Serializable

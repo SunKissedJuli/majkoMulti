@@ -1,5 +1,6 @@
 package com.example.majkomulti.data.mapper
 
+import com.example.majkomulti.commons.Constantas
 import com.example.majkomulti.data.models.Task.TaskDataResponse
 import com.example.majkomulti.domain.modelsUI.Project.ProjectDataUi
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
@@ -18,7 +19,7 @@ fun TaskDataResponse.toUI(): TaskDataUi {
         priority = this.priority ?: 0,
         deadline = this.deadline.orEmpty(),
         status = this.status ?: 0,
-        image = this.image.orEmpty(),
+        image = this.image?.let { Constantas.BASE_URL+this.image } ?: "",
         creator = this.creator?.map { it.toUI() } ?: emptyList(),
         mainTaskId = this.mainTaskId.orEmpty(),
         taskMembers = this.taskMembers?.map { it.toUI() } ?: emptyList(),

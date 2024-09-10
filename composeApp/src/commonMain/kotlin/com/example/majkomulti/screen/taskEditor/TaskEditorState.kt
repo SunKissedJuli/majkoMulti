@@ -22,8 +22,8 @@ data class TaskEditorState(
     val backgroundColor: Color = DEFAULT_BACKGROUND_COLOR,
     val noteText: String = DEFAULT_STRING,
     val newNote: Boolean = DEFAULT_BOOLEAN,
-    val notes: List<NoteDataUi>? = listOf(),
-    val subtask: List<TaskDataUi>? = listOf(),
+    val notes: List<NoteDataUi> = emptyList(),
+    val subtask: List<TaskDataUi> = emptyList(),
     val isAdding: Boolean = DEFAULT_BOOLEAN,
     val subtaskText: String = DEFAULT_STRING,
     val subtaskName: String = DEFAULT_STRING,
@@ -31,8 +31,8 @@ data class TaskEditorState(
     val subtaskPriority: Int = DEFAULT_INT,
     val subtaskStatus: Int = DEFAULT_INT,
     val subtaskProject: String = DEFAULT_STRING,
-    val statuses: List<InfoUi> = listOf(),
-    val proprieties: List<InfoUi> = listOf(),
+    val statuses: List<InfoUi> = emptyList(),
+    val proprieties: List<InfoUi> = emptyList(),
     val exitDialog: Boolean = DEFAULT_BOOLEAN,
     val expanded: Boolean = DEFAULT_BOOLEAN
 ) {

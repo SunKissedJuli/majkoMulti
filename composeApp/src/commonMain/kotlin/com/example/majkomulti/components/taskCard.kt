@@ -50,7 +50,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TaskCard(navigator: Navigator,
+fun TaskCard(onClick: (String)-> Unit,
              priorityColor : Color = MaterialTheme.colorScheme.background,
              statusName : String,
              taskData: TaskDataUi,
@@ -71,7 +71,7 @@ fun TaskCard(navigator: Navigator,
         .background(color = priorityColor)
         .border(3.dp, color = borderColor, shape = RoundedCornerShape(20.dp))
         .combinedClickable(
-            onClick = { navigator.push(TaskEditorScreen(taskData.id)) },
+            onClick = {onClick(taskData.id)},
             onLongClick = {
                 if (isSelected) {
                     onLongTapRelease(taskData.id)
@@ -88,28 +88,9 @@ fun TaskCard(navigator: Navigator,
                 .fillMaxWidth()
                 .fillMaxHeight(0.14f),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ){
+            verticalAlignment = Alignment.CenterVertically){
 
-            SubcomposeAsyncImage((Constantas.BASE_URL + taskData.creator.get(0).image),
-                contentDescription = "",
-                Modifier
-                    .size(27.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop,
-                loading = { Box(
-                    Modifier
-                        .fillMaxHeight(0.8f)
-                        .size(27.dp)
-                        .aspectRatio(1f)
-                        .background(MaterialTheme.colorScheme.primary, shape = CircleShape))},
-                error = { Box(
-                    Modifier
-                        .fillMaxHeight(0.8f)
-                        .size(27.dp)
-                        .aspectRatio(1f)
-                        .background(MaterialTheme.colorScheme.primary, shape = CircleShape))})
-
+            CircleAsyncImage(taskData.creator.get(0).image,27)
 
             Spacer(Modifier.width(7.dp))
             Text(text= taskData.title, modifier = Modifier.fillMaxWidth(0.7f), fontSize = 14.sp, fontWeight = FontWeight.Medium, softWrap = true, maxLines = 2)

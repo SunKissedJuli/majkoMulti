@@ -19,6 +19,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import java.io.File
 import com.example.majkomulti.data.models.User.UserUpdateImage
+import kotlinx.coroutines.delay
 import java.io.FileOutputStream
 import javax.swing.JFileChooser
 
@@ -93,7 +94,28 @@ internal class ProfileViewModel : BaseScreenModel<ProfileState, Unit>(ProfileSta
     fun addFile(file: File) = intent {
         launchOperation(
             operation = {
-                userRepository.updateUserImage(state.userName, file = file)
+                userRepository.updateUserImage(state.userName, file.toURI().toString())
+            },
+            success = {loadData()}
+        )
+    }
+
+    fun changeAvatar(image: String) = intent {
+        reduce {
+            state.copy(
+                avatar = image
+            )
+        }
+        updateUserProfile(image = image)
+    }
+
+    fun updateUserProfile(image: String) = intent {
+        launchOperation(
+            operation = {
+                userRepository.updateUserImage(
+                    name = state.userName,
+                    image = image,
+                )
             },
             success = {loadData()}
         )

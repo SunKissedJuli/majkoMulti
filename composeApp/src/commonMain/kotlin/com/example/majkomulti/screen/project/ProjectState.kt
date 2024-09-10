@@ -3,12 +3,12 @@ package com.example.majkomulti.screen.project
 import com.example.majkomulti.domain.modelsUI.Project.ProjectDataUi
 
 data class ProjectState(
-    val personalProject : List<ProjectDataUi>? = listOf(),
-    val groupProject : List<ProjectDataUi>? = listOf(),
-    val personalActiveProject : List<ProjectDataUi>? = listOf(),
-    val personalDisactiveProject : List<ProjectDataUi>? = listOf(),
-    val groupActiveProject : List<ProjectDataUi>? = listOf(),
-    val groupDisactiveProject : List<ProjectDataUi>? = listOf(),
+    val personalProject : List<ProjectDataUi> = emptyList(),
+    val groupProject : List<ProjectDataUi> = emptyList(),
+    val personalActiveProject : List<ProjectDataUi> = emptyList(),
+    val personalDisactiveProject : List<ProjectDataUi> = emptyList(),
+    val groupActiveProject : List<ProjectDataUi> = emptyList(),
+    val groupDisactiveProject : List<ProjectDataUi> = emptyList(),
     val searchString: String = DEFAULT_STRING,
     val isAdding: Boolean = DEFAULT_BOOLEAN,
     val newProjectName : String = DEFAULT_STRING,

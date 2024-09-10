@@ -1,5 +1,6 @@
 package com.example.majkomulti.data.mapper
 
+import com.example.majkomulti.commons.Constantas
 import com.example.majkomulti.data.models.GroupData.GroupResponse
 import com.example.majkomulti.data.models.ProjectData.ProjectDataResponse
 import com.example.majkomulti.domain.modelsUI.Group.GroupUi
@@ -20,7 +21,7 @@ fun ProjectDataResponse.toUI() : ProjectDataUi {
         isArchive = this.isArchive?:0,
         author = this.author?.toUI()?: CurrentUserDataUi.empty(),
         members = this.members?: emptyList(),
-        image = this.image.orEmpty(),
+        image = this.image?.let { Constantas.BASE_URL+this.image } ?: "",
         isPersonal = this.isPersonal?:true,
         countFiles = this.countFiles?:0
     )

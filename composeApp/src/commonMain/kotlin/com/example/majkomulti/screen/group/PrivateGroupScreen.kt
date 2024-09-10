@@ -37,8 +37,6 @@ internal class PrivateGroupScreen : Screen {
     @Composable
     override fun Content() {
 
-        val navigator = LocalNavigator.currentOrThrow
-
         val viewModel = rememberScreenModel { GroupViewModel() }
         LaunchedEffect(Unit) {
             launch {
@@ -84,16 +82,13 @@ internal class PrivateGroupScreen : Screen {
                                 )
                             )
                         }
-                        if(!group.isNullOrEmpty()){
-                            items(group){ group ->
-                                GroupDesktopCard(
-                                    navigator,
-                                    groupData = group,
-                                    onLongTap = { viewModel.openPanel(it) },
-                                    onLongTapRelease = { viewModel.openPanel(it) },
-                                    isSelected = uiState.longtapGroupId.contains(group.id)
-                                )
-                            }
+                        items(group){ group ->
+                            GroupDesktopCard(
+                                groupData = group,
+                                onLongTap = { viewModel.openPanel(it) },
+                                onLongTapRelease = { viewModel.openPanel(it) },
+                                isSelected = uiState.longtapGroupId.contains(group.id)
+                            )
                         }
                     }
                 }

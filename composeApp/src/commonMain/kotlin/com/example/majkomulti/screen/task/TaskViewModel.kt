@@ -30,7 +30,7 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
     private val taskRepository: TaskRepository by inject()
     private val infoRepository: InfoRepository by inject()
 
-    fun updateSearchString(newSearchString: String, whatFilter: Int) = blockingIntent {
+    fun updateSearchString(newSearchString: String) = blockingIntent {
         reduce {
             state.copy(searchString = newSearchString)
         }
@@ -63,8 +63,8 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
 
     fun getPriority() : List<SpinnerItems>{
         val list = mutableListOf<SpinnerItems>()
-        if (!state.priorities.isNullOrEmpty()) {
-            for (propriety in state.priorities!!) {
+        if (state.priorities.isNotEmpty()) {
+            for (propriety in state.priorities) {
                 list.add(SpinnerItems(propriety.id.toString(), propriety.name))
             }
         }
@@ -72,7 +72,7 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
     }
 
     fun getStatusName(statusId: Int): String {
-        return if (!state.statuses.isNullOrEmpty()) {
+        return if (state.statuses.isNotEmpty()) {
             state.statuses.find { it.id == statusId }?.name ?: ""
         } else {
             ""
@@ -81,8 +81,8 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
 
     fun getStatus() : List<SpinnerItems>{
         val list = mutableListOf<SpinnerItems>()
-        if (!state.statuses.isNullOrEmpty()) {
-            for (status in state.statuses!!) {
+        if (state.statuses.isNotEmpty()) {
+            for (status in state.statuses) {
                 list.add(SpinnerItems(status.id.toString(), status.name))
             }
         }
@@ -90,8 +90,8 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
     }
 
     fun getPriorityName(priorityId: Int) : String{
-        if(!state.priorities.isNullOrEmpty()){
-            for(item in state.priorities!!){
+        if(state.priorities.isNotEmpty()){
+            for(item in state.priorities){
                 if(item.id==priorityId){
                     return item.name
                 }
@@ -101,8 +101,8 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
     }
 
     fun getStatus(statusId: Int): String {
-        if (!state.statuses.isNullOrEmpty()) {
-            for (item in state.statuses!!) {
+        if (state.statuses.isNotEmpty()) {
+            for (item in state.statuses) {
                 if (item.id == statusId) {
                     return item.name
                 }
@@ -200,7 +200,8 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
                         groupAllTaskList = notFavoriteGroup.sortedBy { it.status },
                         groupFavoritesTaskList = favGroup.sortedBy { it.status })
                 }
-            }
+            },
+            loading = { setStatus(false) }
         )
     }
 
@@ -234,7 +235,8 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
             operation = {
                 taskRepository.addToFavorite(TaskById(task_id))
             },
-            success = {loadData() }
+            success = {loadData() },
+            loading = { setStatus(false) }
         )
     }
 
@@ -243,11 +245,12 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
             operation = {
                 taskRepository.removeFavotire(TaskById(task_id))
             },
-            success = {loadData() }
+            success = {loadData() },
+            loading = { setStatus(false) }
         )
     }
 
-    fun openDesktopPanel(taskId: String) = blockingIntent {
+    fun openDesktopPanel(taskId: String = "") = blockingIntent {
         reduce { state.copy(isTask = !state.isTask) }
         if(state.isTask){
             loadTask(taskId)

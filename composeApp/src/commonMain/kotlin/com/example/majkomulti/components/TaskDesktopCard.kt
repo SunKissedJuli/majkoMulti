@@ -35,7 +35,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.navigator.Navigator
 import coil3.compose.AsyncImage
 import com.example.majkomulti.commons.Constantas
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
@@ -85,24 +84,9 @@ fun TaskDesktopCard(
                 .fillMaxWidth()
                 .fillMaxHeight(0.14f),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ){
+            verticalAlignment = Alignment.CenterVertically){
 
-            if(!taskData.creator.get(0).image.isNullOrEmpty()){
-                AsyncImage((Constantas.BASE_URL + taskData.creator.get(0).image),
-                    contentDescription = "",
-                    Modifier
-                        .size(27.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop)
-            }else{
-                Box(
-                    Modifier
-                        .fillMaxHeight(0.8f)
-                        .size(27.dp)
-                        .aspectRatio(1f)
-                        .background(MaterialTheme.colorScheme.primary, shape = CircleShape))
-            }
+            CircleAsyncImage(taskData.creator.get(0).image,27)
 
             Spacer(Modifier.width(7.dp))
             Text(text= taskData.title, modifier = Modifier.fillMaxWidth(0.7f), fontSize = 14.sp, fontWeight = FontWeight.Medium, softWrap = true, maxLines = 2)

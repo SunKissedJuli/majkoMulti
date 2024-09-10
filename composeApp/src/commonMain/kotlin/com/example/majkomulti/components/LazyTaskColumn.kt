@@ -21,7 +21,6 @@ fun LazyTaskColumn(
     onClick: (String) -> Unit = {},
     taskList: List<TaskDataUi>,
     uiState: TaskState,
-    navigator: Navigator,
     status: (Int)-> String,
     color: @Composable (Int)-> Color,
     onBurnStarClick: (String) -> Unit = {},
@@ -41,17 +40,17 @@ fun LazyTaskColumn(
                     bottom = 5.dp))
         }
         if (taskList.isNotEmpty()) {
-            animatedItems(taskList){ it ->
+            animatedItems(taskList){ task ->
                 TaskDesktopCard(
                     onClick = onClick,
-                    statusName = status(it.status),
-                    priorityColor = color(it.priority),
-                    taskData = it,
+                    statusName = status(task.status),
+                    priorityColor = color(task.priority),
+                    taskData = task,
                     onBurnStarClick = onBurnStarClick,
                     onDeadStarClick = onDeadStarClick,
                     onLongTap = { },
                     onLongTapRelease = { },
-                    isSelected = uiState.longtapTaskId.contains(it.id))
+                    isSelected = uiState.longtapTaskId.contains(task.id))
             }
         }
     }

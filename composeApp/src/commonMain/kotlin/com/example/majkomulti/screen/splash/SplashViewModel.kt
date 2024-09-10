@@ -12,7 +12,6 @@ internal class SplashViewModel(initState: Unit) : BaseScreenModel<Unit, SplashEv
     private val authManager: AuthManager by inject()
 
     fun isAutorize() = intent {
-        delay(2000)
        if(authManager.token!=null){
            postSideEffect(SplashEvent.UserAutorize)
        }

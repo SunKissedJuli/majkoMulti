@@ -65,14 +65,6 @@ internal actual class ProfileScreen: Screen, KoinComponent {
             verticalArrangement = Arrangement.Center) {
             SetProfileScreen(uiState, {viewModel.updateUserName(it)}, {viewModel.updateUserEmail(it)}, viewModel)
         }
-
-        /*if (uiState.isChangePassword){
-            ChangePassword(uiState,  onUpdateOldPassword = viewModel::updateOldPassword,
-                onUpdateNewPassword = viewModel::updateNewPassword,
-                onUpdateConfirmPassword = viewModel::updateConfirmPassword,
-                onSave = viewModel::changePassword,
-                onDismissRequest = viewModel::changePasswordScreen)
-        }*/
     }
 }
 
@@ -88,7 +80,7 @@ private fun SetProfileScreen(uiState: ProfileState, onUpdateUserName: (String) -
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
 
-        CircleAsyncImage(uiState.avatar,200)
+        CircleAsyncImage(uiState.avatar,200, onClick = {viewModel.openFile()})
     }
 
     Spacer(modifier = Modifier.height(20.dp))

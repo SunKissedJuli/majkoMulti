@@ -1,7 +1,9 @@
 package com.example.majkomulti.domain.modelsUI.Group
 
+import com.example.majkomulti.data.models.UploadFiles
 import com.example.majkomulti.domain.modelsUI.Project.ProjectDataUi
 import com.example.majkomulti.domain.modelsUI.Project.ProjectRoleUi
+import com.example.majkomulti.domain.modelsUI.UploadFilesUi
 import com.example.majkomulti.domain.modelsUI.User.CurrentUserDataUi
 
 data class GroupUi(
@@ -17,7 +19,7 @@ data class GroupUi(
     val filesCount: Int,
     val projectsGroup: List<ProjectDataUi>,
     val members: List<GroupMemberUi>,
-    val files: List<Any>
+    val files: List<UploadFilesUi>
 ){
     companion object {
         fun empty() = GroupUi(
@@ -33,7 +35,7 @@ data class GroupUi(
             filesCount = 0,
             projectsGroup = emptyList(),
             members = emptyList(),
-            files = emptyList()
+            files = emptyList(),
         )
     }
 }

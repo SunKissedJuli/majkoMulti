@@ -11,7 +11,7 @@ import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
-internal class LoginViewModel : BaseScreenModel<LoginState, LoginEvent>(LoginState.InitState()) {
+internal class LoginViewModel : BaseScreenModel<LoginState, LoginEvent>(LoginState.InitState) {
     private val authManager: AuthManager by inject()
     private val userRepository: UserRepository by inject()
 

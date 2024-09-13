@@ -1,26 +1,25 @@
-package com.example.majkomulti.screen.MainVerticalTab
+package com.example.majkomulti.screen.tabs
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.majkomulti.images.MajkoResourceImages
-import com.example.majkomulti.screen.task.GroupTaskScreen
-import com.example.majkomulti.strings.MajkoResourceStrings
 import io.github.skeptick.libres.compose.painterResource
+import com.example.majkomulti.screen.profile.ProfileScreen
 
-object GroupTaskTab: Tab {
+object ProfileTab: Tab {
 
     @Composable
     override fun Content() {
-        Navigator(GroupTaskScreen())
+        Navigator(ProfileScreen())
     }
 
     override val options: TabOptions
         @Composable
         get() = TabOptions(
             index = 1u,
-            title = MajkoResourceStrings.common_group_task,
-            icon = painterResource(MajkoResourceImages.icon_task)
+            title = "Профиль",
+            icon = painterResource(MajkoResourceImages.icon_profile)
         )
 }

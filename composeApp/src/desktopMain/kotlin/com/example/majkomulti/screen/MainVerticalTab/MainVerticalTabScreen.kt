@@ -36,14 +36,19 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.example.majkomulti.components.CustomScaffold
 import com.example.majkomulti.components.HorizontalLine
-import com.example.majkomulti.screen.MainTab.ProfileTab
-import com.example.majkomulti.screen.MainTab.TaskTab
+import com.example.majkomulti.di.KoinInjector
+import com.example.majkomulti.domain.manager.AuthManager
+import com.example.majkomulti.screen.tabs.ProfileTab
+import com.example.majkomulti.screen.tabs.TaskTab
 import com.example.majkomulti.strings.MajkoResourceStrings
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class MainVerticalTabScreen() : Screen {
+class MainVerticalTabScreen() : Screen, KoinComponent {
 
     @Composable
     override fun Content() {
+        val manager: AuthManager by inject()
         TabNavigator(TaskTab, disposeNestedNavigators = true) { tab ->
             var isPersonal by remember { mutableStateOf(true) }
             val tabNavigator = LocalTabNavigator.current
@@ -63,6 +68,7 @@ class MainVerticalTabScreen() : Screen {
                         )
                         PersonalGroupButtons(isPersonal) {
                             isPersonal = !isPersonal
+                            manager.isPrivate = isPersonal
                             when (tabNavigator.current) {
                                 is PersonalTaskTab -> {
                                     tabNavigator.current = GroupTaskTab

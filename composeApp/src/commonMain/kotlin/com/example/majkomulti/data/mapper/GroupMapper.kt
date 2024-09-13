@@ -28,7 +28,7 @@ fun GroupResponse.toUI(): GroupUi {
         filesCount = this.filesCount?:0,
         projectsGroup = this.projectsGroup?.map { it.toUI() }?: emptyList(),
         members = this.members?.map { it.toUI() }?: emptyList(),
-        files = this.files?: emptyList()
+        files = this.files?.map{it.toUI()} ?: emptyList()
     )
 }
 

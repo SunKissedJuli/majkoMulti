@@ -1,33 +1,47 @@
 package com.example.majkomulti.screen.task
 
+import com.example.majkomulti.commons.Constantas.DEFAULT_BOOLEAN
+import com.example.majkomulti.commons.Constantas.DEFAULT_STRING
 import com.example.majkomulti.domain.modelsUI.InfoUi
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
 
 data class TaskState(
-    val allTaskList: List<TaskDataUi> = emptyList(),
-    val favoritesTaskList: List<TaskDataUi> = emptyList(),
-    val personalFavoritesTaskList: List<TaskDataUi> = emptyList(),
-    val personalAllTaskList: List<TaskDataUi> = emptyList(),
-    val groupAllTaskList: List<TaskDataUi> = emptyList(),
-    val groupFavoritesTaskList: List<TaskDataUi> = emptyList(),
-    val statuses: List<InfoUi> = emptyList(),
-    val priorities: List<InfoUi> = emptyList(),
-    val searchString: String = DEFAULT_STRING,
-    val isError: Boolean = DEFAULT_BOOLEAN,
-    val errorMessage: Int? = null,
-    val isMessage: Boolean = DEFAULT_BOOLEAN,
-    val message: Int? = null,
-    val isLongtap: Boolean = DEFAULT_BOOLEAN,
-    val longtapTaskId: String = DEFAULT_STRING,
-    val expandedFilter: Boolean = DEFAULT_BOOLEAN,
-    val expandedLongTap: Boolean = DEFAULT_BOOLEAN,
-    val taskData: TaskDataUi = TaskDataUi.empty(),
-    val isTask: Boolean = DEFAULT_BOOLEAN
-){
-    companion object {
-        const val DEFAULT_STRING = ""
-        const val DEFAULT_BOOLEAN = false
+    val allTaskList: List<TaskDataUi>,
+    val favoritesTaskList: List<TaskDataUi>,
 
-        fun InitState() = TaskState()
+    val statuses: List<InfoUi>,
+    val priorities: List<InfoUi>,
+    val searchString: String,
+    val isAllTask: Boolean,
+    val isError: Boolean,
+    val errorMessage: Int?,
+    val isMessage: Boolean,
+    val message: Int?,
+    val isLongtap: Boolean,
+    val longtapTaskId: String,
+    val expandedFilter: Boolean,
+    val expandedLongTap: Boolean,
+    val taskData: TaskDataUi,
+    val isTask: Boolean
+) {
+    companion object {
+        val InitState = TaskState(
+            allTaskList = emptyList(),
+            favoritesTaskList = emptyList(),
+            isAllTask = DEFAULT_BOOLEAN,
+            statuses = emptyList(),
+            priorities = emptyList(),
+            searchString = DEFAULT_STRING,
+            isError = DEFAULT_BOOLEAN,
+            errorMessage = null,
+            isMessage = DEFAULT_BOOLEAN,
+            message = null,
+            isLongtap = DEFAULT_BOOLEAN,
+            longtapTaskId = DEFAULT_STRING,
+            expandedFilter = DEFAULT_BOOLEAN,
+            expandedLongTap = DEFAULT_BOOLEAN,
+            taskData = TaskDataUi.empty(),
+            isTask = DEFAULT_BOOLEAN
+        )
     }
 }

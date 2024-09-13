@@ -11,7 +11,7 @@ import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
-internal class GroupViewModel: BaseScreenModel<GroupState, Unit>(GroupState.InitState()) {
+internal class GroupViewModel: BaseScreenModel<GroupState, Unit>(GroupState.InitState) {
 
     private val groupRepository: GroupRepository by inject()
 

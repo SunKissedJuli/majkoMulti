@@ -1,35 +1,58 @@
 package com.example.majkomulti.screen.group
 
+import com.example.majkomulti.commons.Constantas.DEFAULT_BOOLEAN
+import com.example.majkomulti.commons.Constantas.DEFAULT_STRING
 import com.example.majkomulti.domain.modelsUI.Group.GroupUi
 
 data class GroupState(
-    val personalGroup : List<GroupUi> = emptyList(),
-    val groupGroup : List<GroupUi> = emptyList(),
-    val personalActiveGroup : List<GroupUi> = emptyList(),
-    val groupActiveGroup : List<GroupUi> = emptyList(),
-    val personalDisactiveGroup : List<GroupUi> = emptyList(),
-    val groupDesactiveGroup : List<GroupUi> = emptyList(),
-    val searchString: String = DEFAULT_STRING,
-    val isAdding: Boolean = DEFAULT_BOOLEAN,
-    val newGroupName : String = DEFAULT_STRING,
-    val newGroupDescription : String = DEFAULT_STRING,
-    val isInvite: Boolean =  DEFAULT_BOOLEAN,
-    val invite: String = DEFAULT_STRING,
-    val inviteMessage: String = DEFAULT_STRING,
-    val isError: Boolean = DEFAULT_BOOLEAN,
-    val errorMessage: Int? = null,
-    val isMessage: Boolean = DEFAULT_BOOLEAN,
-    val message: Int? = null,
-    val isLongtap: Boolean = DEFAULT_BOOLEAN,
-    val longtapGroupId: String = DEFAULT_STRING,
-    val expandedFilter: Boolean = DEFAULT_BOOLEAN,
-    val expanded: Boolean = DEFAULT_BOOLEAN,
-    val expandedLongTap: Boolean = DEFAULT_BOOLEAN,
+    val personalGroup: List<GroupUi>,
+    val groupGroup: List<GroupUi>,
+    val personalActiveGroup: List<GroupUi>,
+    val groupActiveGroup: List<GroupUi>,
+    val personalDisactiveGroup: List<GroupUi>,
+    val groupDesactiveGroup: List<GroupUi>,
+    val searchString: String,
+    val isAdding: Boolean,
+    val newGroupName: String,
+    val newGroupDescription: String,
+    val isInvite: Boolean,
+    val invite: String,
+    val inviteMessage: String,
+    val isError: Boolean,
+    val errorMessage: Int?,
+    val isMessage: Boolean,
+    val message: Int?,
+    val isLongtap: Boolean,
+    val longtapGroupId: String,
+    val expandedFilter: Boolean,
+    val expanded: Boolean,
+    val expandedLongTap: Boolean
 ) {
     companion object {
-        const val DEFAULT_STRING = ""
-        const val DEFAULT_BOOLEAN = false
 
-        fun InitState() = GroupState()
+        val InitState = GroupState(
+            personalGroup = emptyList(),
+            groupGroup = emptyList(),
+            personalActiveGroup = emptyList(),
+            groupActiveGroup = emptyList(),
+            personalDisactiveGroup = emptyList(),
+            groupDesactiveGroup = emptyList(),
+            searchString = DEFAULT_STRING,
+            isAdding = DEFAULT_BOOLEAN,
+            newGroupName = DEFAULT_STRING,
+            newGroupDescription = DEFAULT_STRING,
+            isInvite = DEFAULT_BOOLEAN,
+            invite = DEFAULT_STRING,
+            inviteMessage = DEFAULT_STRING,
+            isError = DEFAULT_BOOLEAN,
+            errorMessage = null,
+            isMessage = DEFAULT_BOOLEAN,
+            message = null,
+            isLongtap = DEFAULT_BOOLEAN,
+            longtapGroupId = DEFAULT_STRING,
+            expandedFilter = DEFAULT_BOOLEAN,
+            expanded = DEFAULT_BOOLEAN,
+            expandedLongTap = DEFAULT_BOOLEAN
+        )
     }
 }

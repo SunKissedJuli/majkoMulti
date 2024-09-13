@@ -15,12 +15,14 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.example.majkomulti.components.CustomScaffold
+import com.example.majkomulti.screen.tabs.ProfileTab
+import com.example.majkomulti.screen.tabs.TaskTab
 
 class MainTabScreen(): Screen {
 
     @Composable
     override fun Content() {
-        TabNavigator(TaskTab, disposeNestedNavigators = true){ tab ->
+        TabNavigator(TaskTab, disposeNestedNavigators = false){ tab ->
             CustomScaffold(
                 bottomBar = {
                         NavigationBar(

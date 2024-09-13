@@ -1,13 +1,16 @@
 package com.example.majkomulti.screen.login
 
-data class LoginState(
-    val login: String = DEFAULT_STRING,
-    val password: String = DEFAULT_STRING
-){
-    companion object{
-        const val DEFAULT_STRING = ""
+import com.example.majkomulti.commons.Constantas.DEFAULT_STRING
 
-        fun InitState() = LoginState()
+data class LoginState(
+    val login: String,
+    val password: String
+) {
+    companion object {
+
+        val InitState = LoginState(
+            login = DEFAULT_STRING,
+            password = DEFAULT_STRING
+        )
     }
 }
-

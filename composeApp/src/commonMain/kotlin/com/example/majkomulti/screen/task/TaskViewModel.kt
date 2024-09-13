@@ -13,6 +13,7 @@ import com.example.majkomulti.data.models.Task.TaskById
 import com.example.majkomulti.data.models.Task.TaskByIdUnderscore
 import com.example.majkomulti.data.models.Task.TaskUpdateData
 import com.example.majkomulti.data.models.UploadFiles
+import com.example.majkomulti.domain.manager.AuthManager
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
 import com.example.majkomulti.domain.repository.InfoRepository
 import com.example.majkomulti.domain.repository.TaskRepository
@@ -25,16 +26,22 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import java.io.File
 import javax.swing.JFileChooser
 
-internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.InitState()) {
+internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.InitState) {
 
     private val taskRepository: TaskRepository by inject()
     private val infoRepository: InfoRepository by inject()
+    private val manager: AuthManager by inject()
 
     fun updateSearchString(newSearchString: String) = blockingIntent {
         reduce {
             state.copy(searchString = newSearchString)
         }
-        loadAllTask(newSearchString)
+        if(state.isAllTask){
+            loadAllTask(newSearchString)
+        }else{
+            loadSortTasks(newSearchString)
+        }
+
     }
 
     fun openPanel(id: String)  = blockingIntent {
@@ -135,15 +142,8 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
         return state.allTaskList?.filter { it.status == status } ?: emptyList()
     }
 
-    fun filterByStatusPersonal(status: Int): List<TaskDataUi> {
-        return state.personalAllTaskList?.filter { it.status == status } ?: emptyList()
-    }
-
-    fun filterByStatusGroup(status: Int): List<TaskDataUi> {
-        return state.groupAllTaskList?.filter { it.status == status } ?: emptyList()
-    }
-
-    fun loadData() {
+    fun loadData() = intent{
+        reduceLocal { state.copy(isAllTask = true) }
         loadAllTask("")
     }
 
@@ -162,10 +162,6 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
             success = { response ->
                 val fav: MutableList<TaskDataUi> = mutableListOf()
                 val notFavorite: MutableList<TaskDataUi> = mutableListOf()
-                val favPersonal: MutableList<TaskDataUi> = mutableListOf()
-                val notFavoritePersonal: MutableList<TaskDataUi> = mutableListOf()
-                val favGroup: MutableList<TaskDataUi> = mutableListOf()
-                val notFavoriteGroup: MutableList<TaskDataUi> = mutableListOf()
                 response.forEach { item ->
                     if (!item.isFavorite) {
                         notFavorite.add(item)
@@ -173,35 +169,44 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
                         fav.add(item)
                     }
                 }
-                response.forEach { item ->
-                    if(item.isPersonal){
-                        if (!item.isFavorite) {
-                            notFavoritePersonal.add(item)
-                        }else if(item.isFavorite){
-                            favPersonal.add(item)
-                        }
-                    }
+
+                reduceLocal {
+                    state.copy( allTaskList = notFavorite.sortedBy { it.status },
+                        favoritesTaskList = fav.sortedBy { it.status },
+                    )
                 }
+            },
+        )
+    }
+
+    fun loadSortData(){
+        loadSortTasks("")
+    }
+
+    private fun loadSortTasks(search: String) = intent {
+        launchOperation(
+            operation = {
+                taskRepository.getUserTask(
+                    SearchTask(search)
+                )
+            },
+            success = { response ->
+                val fav: MutableList<TaskDataUi> = mutableListOf()
+                val notFavorite: MutableList<TaskDataUi> = mutableListOf()
                 response.forEach { item ->
-                    if(!item.isPersonal){
-                        if (!item.isFavorite) {
-                            notFavoriteGroup.add(item)
-                        }else if(item.isFavorite){
-                            favGroup.add(item)
-                        }
+                    if (!item.isFavorite) {
+                        notFavorite.add(item)
+                    }else if(item.isFavorite){
+                        fav.add(item)
                     }
                 }
 
                 reduceLocal {
                     state.copy( allTaskList = notFavorite.sortedBy { it.status },
                         favoritesTaskList = fav.sortedBy { it.status },
-                        personalAllTaskList = notFavoritePersonal.sortedBy { it.status },
-                        personalFavoritesTaskList = favPersonal.sortedBy { it.status },
-                        groupAllTaskList = notFavoriteGroup.sortedBy { it.status },
-                        groupFavoritesTaskList = favGroup.sortedBy { it.status })
+                    )
                 }
             },
-            loading = { setStatus(false) }
         )
     }
 
@@ -226,7 +231,7 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
             success = { response ->
                 reduceLocal {
                     state.copy(priorities = response)}
-            }
+            },
         )
     }
 
@@ -235,7 +240,10 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
             operation = {
                 taskRepository.addToFavorite(TaskById(task_id))
             },
-            success = {loadData() },
+            success = {
+                if(state.isAllTask){ loadData() }
+                else{ loadSortData() }
+                      },
             loading = { setStatus(false) }
         )
     }
@@ -245,7 +253,10 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
             operation = {
                 taskRepository.removeFavotire(TaskById(task_id))
             },
-            success = {loadData() },
+            success = {
+                if(state.isAllTask){ loadData() }
+                else{ loadSortData() }
+            },
             loading = { setStatus(false) }
         )
     }
@@ -278,7 +289,12 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
             operation = {
                 taskRepository.updateTask(task)
             },
-            success = {loadData()}
+            success = {
+                reduceLocal  { state.copy(taskData = TaskDataUi.empty()) }
+                loadData()},
+            failure = {
+                reduceLocal  { state.copy(taskData = TaskDataUi.empty())}
+            }
         )
     }
 
@@ -288,11 +304,11 @@ internal class TaskViewModel : BaseScreenModel<TaskState, TaskEvent>(TaskState.I
 
        if (returnValue == JFileChooser.APPROVE_OPTION) {
            println("!!!!!!!!!!!!!!!!!!!имя выбранного файла: " + fileChooser.selectedFile.name)
-           addFile(fileChooser.selectedFile)
+          // addFile(fileChooser.selectedFile.toURI().toString())
         }
     }
 
-    fun addFile(file: File) = intent {
+    fun addFile(file: String) = intent {
        launchOperation(
             operation = {
                 infoRepository.uploadFile(taskId = state.taskData.id, files = file)

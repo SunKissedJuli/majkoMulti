@@ -19,6 +19,8 @@ interface TaskRepository {
 
     suspend fun getAllUserTask(search: SearchTask): Either<Failure, List<TaskDataUi>>
 
+    suspend fun getUserTask(search: SearchTask): Either<Failure, List<TaskDataUi>>
+
     suspend fun postNewTask(task: TaskData): Either<Failure, TaskDataUi>
 
     suspend fun getTaskById(taskId: TaskById): Either<Failure, TaskDataUi>

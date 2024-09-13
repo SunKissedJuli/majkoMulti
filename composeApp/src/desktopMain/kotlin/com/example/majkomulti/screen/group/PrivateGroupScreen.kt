@@ -24,9 +24,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import com.example.majkomulti.components.GroupCard
 import com.example.majkomulti.components.GroupDesktopCard
 import com.example.majkomulti.components.SearchBox
 import com.example.majkomulti.strings.MajkoResourceStrings

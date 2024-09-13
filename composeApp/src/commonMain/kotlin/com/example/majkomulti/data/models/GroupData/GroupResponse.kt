@@ -1,6 +1,7 @@
 package com.example.majkomulti.data.models.GroupData
 import com.example.majkomulti.data.models.ProjectData.ProjectDataResponse
 import com.example.majkomulti.data.models.ProjectData.ProjectRole
+import com.example.majkomulti.data.models.UploadFiles
 import com.example.majkomulti.data.models.User.CurrentUserDataResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -19,7 +20,7 @@ data class GroupResponse(
     @SerialName("files_count") val filesCount: Int?,
     @SerialName("projects_group") val projectsGroup: List<ProjectDataResponse>?,
     @SerialName("members") val members: List<GroupMember>?,
-    @SerialName("files") val files: List<String>?
+    @SerialName("files") val files: List<UploadFiles>?
 )
 
 @Serializable

@@ -35,11 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.SubcomposeAsyncImage
 import com.example.majkomulti.commons.Constantas
-import com.example.majkomulti.commons.clickableBlank
+import com.example.majkomulti.ext.clickableBlank
 import com.example.majkomulti.components.BlueRoundedButton
 import com.example.majkomulti.components.ButtonBack
 import com.example.majkomulti.components.HorizontalLine
@@ -115,30 +113,12 @@ internal actual class TaskScreen : Screen {
                                 }
                             }
 
-                            LazyTaskColumn({ viewModel.openDesktopPanel(it) }, viewModel.filterByStatus(1),
-                                uiState,viewModel::getStatus, { viewModel.getPriority(it) },
-                                onBurnStarClick = { viewModel.removeFavotite(it) },
-                                onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_no)
-
-                            LazyTaskColumn({ viewModel.openDesktopPanel(it) }, viewModel.filterByStatus(2),
-                                uiState, viewModel::getStatus, { viewModel.getPriority(it) },
-                                onBurnStarClick = { viewModel.removeFavotite(it) },
-                                onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_discus)
-
-                            LazyTaskColumn({ viewModel.openDesktopPanel(it) }, viewModel.filterByStatus(3),
-                                uiState,viewModel::getStatus, { viewModel.getPriority(it) },
-                                onBurnStarClick = { viewModel.removeFavotite(it) },
-                                onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_wait)
-
-                            LazyTaskColumn({ viewModel.openDesktopPanel(it) }, viewModel.filterByStatus(4),
-                                uiState, viewModel::getStatus, { viewModel.getPriority(it) },
-                                onBurnStarClick = { viewModel.removeFavotite(it) },
-                                onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_process)
-
-                            LazyTaskColumn({ viewModel.openDesktopPanel(it) }, viewModel.filterByStatus(5),
-                                uiState, viewModel::getStatus, { viewModel.getPriority(it) },
-                                onBurnStarClick = { viewModel.removeFavotite(it) },
-                                onDeadStarClick = { viewModel.addFavotite(it) }, MajkoResourceStrings.status_finish)
+                            for(status in uiState.statuses){
+                                LazyTaskColumn({ viewModel.openDesktopPanel(it) }, viewModel.filterByStatus(status.id),
+                                    uiState,viewModel::getStatus, { viewModel.getPriority(it) },
+                                    onBurnStarClick = { viewModel.removeFavotite(it) },
+                                    onDeadStarClick = { viewModel.addFavotite(it) },status.name)
+                            }
                         }
                     }
                 }

@@ -1,6 +1,8 @@
 package com.example.majkomulti.domain.repository
 
+import com.example.majkomulti.data.models.MessageData
 import com.example.majkomulti.domain.modelsUI.InfoUi
+import com.example.majkomulti.domain.modelsUI.MessageDataUi
 import com.example.majkomulti.platform.Either
 import com.example.majkomulti.platform.Failure
 import de.jensklingenberg.ktorfit.http.Part
@@ -13,8 +15,5 @@ interface InfoRepository {
 
     suspend fun getPriorities(): Either<Failure, List<InfoUi>>
 
-    suspend fun uploadFile(taskId: String, files: File) :  Either<Failure, Unit>
-
-
-
+    suspend fun uploadFile(taskId: String, files: String) :  Either<Failure, MessageDataUi>
 }

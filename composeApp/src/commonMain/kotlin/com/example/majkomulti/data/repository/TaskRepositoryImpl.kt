@@ -10,6 +10,7 @@ import com.example.majkomulti.data.models.Task.TaskById
 import com.example.majkomulti.data.models.Task.TaskByIdUnderscore
 import com.example.majkomulti.data.models.Task.TaskData
 import com.example.majkomulti.data.models.Task.TaskUpdateData
+import com.example.majkomulti.domain.manager.AuthManager
 import com.example.majkomulti.domain.modelsUI.MessageDataUi
 import com.example.majkomulti.domain.modelsUI.Note.NoteDataUi
 import com.example.majkomulti.domain.modelsUI.Task.TaskDataUi
@@ -18,14 +19,31 @@ import com.example.majkomulti.platform.Either
 import com.example.majkomulti.platform.Failure
 import com.example.majkomulti.platform.apiCall
 
-class TaskRepositoryImpl (private val majkoApi: MajkoApi): TaskRepository {
+class TaskRepositoryImpl (private val majkoApi: MajkoApi, private val manager: AuthManager): TaskRepository {
 
     override suspend fun getAllUserTask(search: SearchTask): Either<Failure, List<TaskDataUi>> {
+
         return apiCall (call = {
             majkoApi.getAllUserTask(search)
         },
             mapResponse = { userData -> userData.toUI() })
     }
+
+    override suspend fun getUserTask(search: SearchTask): Either<Failure, List<TaskDataUi>> {
+        if(manager.isPrivate){
+            return apiCall (call = {
+                majkoApi.getPersonalUserTask(search)
+            },
+                mapResponse = { userData -> userData.toUI() })
+        }else{
+            return apiCall (call = {
+                majkoApi.getGroupUserTask(search)
+            },
+                mapResponse = { userData -> userData.toUI() })
+        }
+
+    }
+
 
     override suspend fun postNewTask(task: TaskData): Either<Failure, TaskDataUi> {
         return apiCall (call = {

@@ -52,9 +52,7 @@ internal actual class ProjectScreen : Screen {
 
     @Composable
     override fun Content() {
-
         val navigator = LocalNavigator.currentOrThrow
-
         val viewModel = rememberScreenModel { ProjectViewModel() }
         LaunchedEffect(Unit) {
             launch {

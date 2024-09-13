@@ -1,4 +1,4 @@
-package com.example.majkomulti.screen.MainTab
+package com.example.majkomulti.screen.tabs
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
@@ -6,20 +6,20 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.majkomulti.images.MajkoResourceImages
 import io.github.skeptick.libres.compose.painterResource
-import com.example.majkomulti.screen.profile.ProfileScreen
+import com.example.majkomulti.screen.task.TaskScreen
 
-object ProfileTab: Tab {
+object TaskTab: Tab {
 
     @Composable
     override fun Content() {
-        Navigator(ProfileScreen())
+        Navigator(TaskScreen())
     }
 
     override val options: TabOptions
         @Composable
         get() = TabOptions(
             index = 1u,
-            title = "Профиль",
-            icon = painterResource(MajkoResourceImages.icon_profile)
+            title = "Задачи",
+            icon = painterResource(MajkoResourceImages.icon_task)
         )
 }

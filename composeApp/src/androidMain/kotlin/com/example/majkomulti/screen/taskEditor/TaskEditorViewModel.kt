@@ -17,6 +17,7 @@ import com.example.majkomulti.data.models.Task.TaskUpdateData
 import com.example.majkomulti.domain.repository.InfoRepository
 import com.example.majkomulti.domain.repository.TaskRepository
 import com.example.majkomulti.platform.BaseScreenModel
+import com.example.majkomulti.platform.permission.service.PermissionsService
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
@@ -25,6 +26,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 
 internal class TaskEditorViewModel: BaseScreenModel<TaskEditorState,Unit>(TaskEditorState.InitState()){
 
+    val filePermissionsService: PermissionsService by inject()
     private val taskRepository: TaskRepository by inject()
     private val infoRepository: InfoRepository by inject()
 
@@ -103,6 +105,22 @@ internal class TaskEditorViewModel: BaseScreenModel<TaskEditorState,Unit>(TaskEd
             reduce {  state.copy(isAdding = false) }
         }else{
             reduce {  state.copy(isAdding = true) }
+        }
+
+    }
+
+    fun addFile(files: List<String>, colorScheme: ColorScheme) = intent {
+        for(file in files){
+            launchOperation(
+                operation = {
+                    infoRepository.uploadFile(
+                        taskId = state.taskId,
+                        files = file,
+                    )
+                },
+                success = {loadData(state.taskId, colorScheme)
+                }
+            )
         }
 
     }

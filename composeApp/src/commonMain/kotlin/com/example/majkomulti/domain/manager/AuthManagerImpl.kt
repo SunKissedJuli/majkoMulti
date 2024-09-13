@@ -14,7 +14,14 @@ class AuthManagerImpl: AuthManager, KoinComponent {
             settings.putString(TOKEN, value.orEmpty())
         }
 
+    override var isPrivate: Boolean
+        get() = if (settings.getBoolean(IS_PRIVATE)) true else settings.getBoolean(IS_PRIVATE, true)
+        set(value){
+            settings.putBoolean(IS_PRIVATE, value?:true)
+        }
+
     companion object{
         private const val TOKEN = "TOKEN"
+        private const val IS_PRIVATE = "IS_PRIVATE"
     }
 }

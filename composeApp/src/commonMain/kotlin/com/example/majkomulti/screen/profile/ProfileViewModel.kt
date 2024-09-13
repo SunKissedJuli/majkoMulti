@@ -23,7 +23,7 @@ import kotlinx.coroutines.delay
 import java.io.FileOutputStream
 import javax.swing.JFileChooser
 
-internal class ProfileViewModel : BaseScreenModel<ProfileState, Unit>(ProfileState.InitState()) {
+internal class ProfileViewModel : BaseScreenModel<ProfileState, Unit>(ProfileState.InitState) {
     private val authManager: AuthManager by inject()
     private val userRepository: UserRepository by inject()
 
@@ -87,26 +87,17 @@ internal class ProfileViewModel : BaseScreenModel<ProfileState, Unit>(ProfileSta
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             println("!!!!!!!!!!!!!!!!!!!имя выбранного файла: " + fileChooser.selectedFile.name)
-            addFile(fileChooser.selectedFile)
+            addFile(fileChooser.selectedFile.toURI().toString())
         }
     }
 
-    fun addFile(file: File) = intent {
+    fun addFile(file: String) = intent {
         launchOperation(
             operation = {
-                userRepository.updateUserImage(state.userName, file.toURI().toString())
+                userRepository.updateUserImage(state.userName, file)
             },
             success = {loadData()}
         )
-    }
-
-    fun changeAvatar(image: String) = intent {
-        reduce {
-            state.copy(
-                avatar = image
-            )
-        }
-        updateUserProfile(image = image)
     }
 
     fun updateUserProfile(image: String) = intent {
@@ -120,47 +111,5 @@ internal class ProfileViewModel : BaseScreenModel<ProfileState, Unit>(ProfileSta
             success = {loadData()}
         )
     }
-
-    fun changePassword(){
-    }
-
-   /* @SuppressLint("Range", "SuspiciousIndentation")
-    @Composable
-    fun OpenGallery(context: Context = LocalContext.current): ManagedActivityResultLauncher<String, Uri?> {
-        var file by remember { mutableStateOf<File?>(null) }
-        val coroutineScope = rememberCoroutineScope()
-        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                file = getFileFromUri(context, uri)
-                coroutineScope.launch {
-                    if (file != null) {
-                        updateUserImage(UserUpdateImage(state.userName), file!!)
-                    }
-                }
-            }
-        }
-
-        return launcher
-    }
-
-    private suspend fun updateUserImage(user: UserUpdateImage, file: File) {
-    }
-
-
-    private fun getFileFromUri(context: Context, uri: Uri): File? {
-        return try {
-            val inputStream = context.contentResolver.openInputStream(uri)
-            val file = File(context.cacheDir, "temp_image")
-
-            inputStream?.use { input ->
-                FileOutputStream(file).use { output ->
-                    input.copyTo(output)
-                }
-            }
-            file
-        } catch (e: Exception) {
-            null
-        }
-    }*/
 
 }

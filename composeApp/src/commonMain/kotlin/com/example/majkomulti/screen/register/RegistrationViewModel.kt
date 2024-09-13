@@ -10,7 +10,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
 
-internal class RegistrationViewModel : BaseScreenModel<RegistrationState, RegistrationEvent>(RegistrationState.InitState()) {
+internal class RegistrationViewModel : BaseScreenModel<RegistrationState, RegistrationEvent>(RegistrationState.InitState) {
     private val authManager: AuthManager by inject()
     private val userRepository: UserRepository by inject()
 

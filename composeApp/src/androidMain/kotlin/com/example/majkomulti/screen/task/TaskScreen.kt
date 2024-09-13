@@ -65,7 +65,7 @@ internal actual class TaskScreen : Screen {
             }
         }
 
-        if (viewModel.status.collectAsState().value) {
+        if (viewModel.status.collectAsState().value && TaskState.InitState==uiState) {
             CustomCircularProgressIndicator()
         } else {
             Scaffold(
@@ -147,7 +147,7 @@ private fun SetTaskScreen(viewModel: TaskViewModel, uiState: TaskState, navigato
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)) {
 
-            if (!favoritesTaskList.isNullOrEmpty()) {
+            if (favoritesTaskList.isNotEmpty()) {
                 item(span = { GridItemSpan(2) }) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
                         Text(text = MajkoResourceStrings.status_fav,
@@ -171,7 +171,7 @@ private fun SetTaskScreen(viewModel: TaskViewModel, uiState: TaskState, navigato
                 }
             }
 
-            if (!allTaskList.isNullOrEmpty()) {
+            if (allTaskList.isNotEmpty()) {
                 item(span = { GridItemSpan(2) }) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
                         Text(text = MajkoResourceStrings.task_each,

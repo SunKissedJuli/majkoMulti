@@ -40,9 +40,8 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.SubcomposeAsyncImage
-import com.example.majkomulti.commons.clickableBlank
+import com.example.majkomulti.ext.clickableBlank
 import com.example.majkomulti.components.BlueRoundedButton
-import com.example.majkomulti.components.CircleAsyncImage
 import com.example.majkomulti.components.LineTextField
 import com.example.majkomulti.ext.granted
 import com.example.majkomulti.images.MajkoResourceImages

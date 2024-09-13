@@ -68,7 +68,6 @@ interface MajkoApi {
     @POST("api/user/update")
     suspend fun updateUserImage(@Part("name") name: String, @Part("image") image : MultipartBody.Part): CurrentUserDataResponse
 */
-
     @Multipart
     @POST("api/user/update")
     suspend fun updateUserImage(@Body body: MultiPartFormDataContent): CurrentUserDataResponse
@@ -77,6 +76,12 @@ interface MajkoApi {
     //таски
     @POST("api/task/allUserTasks")
     suspend fun getAllUserTask(@Body search: SearchTask): List<TaskDataResponse>
+
+    @POST("api/task/getPersonal")
+    suspend fun getPersonalUserTask(@Body search: SearchTask): List<TaskDataResponse>
+
+    @POST("api/task/getPrivate")
+    suspend fun getGroupUserTask(@Body search: SearchTask): List<TaskDataResponse>
 
     @POST("api/task/create")
     suspend fun postNewTask(@Body task: TaskData): TaskDataResponse
@@ -180,8 +185,12 @@ interface MajkoApi {
     @GET("api/get_priorities")
     suspend fun getPriorities() : List<Info>
 
+  //  @Multipart
+   // @POST("api/file/upload")
+  //  suspend fun uploadFile(@Part("task_id") taskId: String, @Part("files") files: MultipartBody.Part) : Unit
+
     @Multipart
     @POST("api/file/upload")
-    suspend fun uploadFile(@Part("task_id") taskId: String, @Part("files") files: MultipartBody.Part) : Unit
+    suspend fun uploadFile(@Body body: MultiPartFormDataContent): MessageData
 
 }

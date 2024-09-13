@@ -1,4 +1,4 @@
-package com.example.majkomulti.commons
+package com.example.majkomulti.ext
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable

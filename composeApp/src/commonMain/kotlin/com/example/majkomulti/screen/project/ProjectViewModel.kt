@@ -12,7 +12,7 @@ import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
-internal class ProjectViewModel : BaseScreenModel<ProjectState, Unit>(ProjectState.InitState()) {
+internal class ProjectViewModel : BaseScreenModel<ProjectState, Unit>(ProjectState.InitState) {
 
     private val projectRepository: ProjectRepository by inject()
 

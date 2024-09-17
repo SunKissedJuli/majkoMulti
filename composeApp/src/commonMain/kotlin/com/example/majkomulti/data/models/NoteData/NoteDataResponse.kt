@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NoteDataResponse(
+class NoteDataResponse(
     @SerialName("id") val id: String?,
     @SerialName("note") val note: String?,
     @SerialName("author") val author: CurrentUserDataResponse?,

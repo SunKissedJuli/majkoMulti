@@ -1,4 +1,4 @@
-package com.example.majkomulti.screen.login
+package com.example.majkomulti.screen.register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,24 +31,26 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.majkomulti.components.BlueRoundedButton
 import com.example.majkomulti.components.CustomScaffold
 import com.example.majkomulti.components.LineTextField
-import com.example.majkomulti.screen.register.RegistrationScreen
+import com.example.majkomulti.data.models.UsrtSignUp.UserSignUpData
+import com.example.majkomulti.screen.login.LoginScreen
 import com.example.majkomulti.screen.splash.SplashScreen
 import com.example.majkomulti.strings.MajkoResourceStrings
 import kotlinx.coroutines.launch
 
-internal actual class LoginScreen: Screen {
+actual internal class RegistrationScreen : Screen {
 
     @Composable
     override fun Content() {
-        val viewModel = rememberScreenModel { LoginViewModel() }
 
+        val viewModel = rememberScreenModel { RegistrationViewModel() }
         val uiState by viewModel.stateFlow.collectAsState()
+
         val navigator =  LocalNavigator.currentOrThrow
 
         LaunchedEffect(viewModel) {
             viewModel.container.sideEffectFlow.collect() {
                 when (it) {
-                    is LoginEvent.LoginSuccess -> {
+                    is RegistrationEvent.RegistrationSuccess -> {
                         navigator.push(SplashScreen())
                     }
                 }
@@ -85,27 +87,33 @@ internal actual class LoginScreen: Screen {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center){
 
-                        LineTextField(uiState.login, {viewModel.updateLogin(it)},
+                        LineTextField(uiState.name, {viewModel.updateUserName(it)},
+                            placeholder = MajkoResourceStrings.login_username, modifier = Modifier.fillMaxWidth(0.5f))
+                        Spacer(modifier = Modifier.height(15.dp))
+
+                        LineTextField(uiState.login, {viewModel.updateUserLogin(it)},
                             placeholder = MajkoResourceStrings.login_login, modifier = Modifier.fillMaxWidth(0.5f))
                         Spacer(modifier = Modifier.height(15.dp))
 
-                        LineTextField(uiState.password, {viewModel.updatePassword(it)},
+                        LineTextField(uiState.password, {viewModel.updateUserPassword(it)},
                             placeholder = MajkoResourceStrings.login_password,
+                            modifier = Modifier.fillMaxWidth(0.5f), isPassword = true)
+                        Spacer(modifier = Modifier.height(15.dp))
+
+                        LineTextField(uiState.passwordRepeat, {viewModel.updateUserPasswordRepeat(it)},
+                            placeholder = MajkoResourceStrings.login_passwordrepeat,
                             modifier = Modifier.fillMaxWidth(0.5f), isPassword = true)
                         Spacer(modifier = Modifier.height(40.dp))
 
-                        BlueRoundedButton({ viewModel.login(uiState.login, uiState.password) }, MajkoResourceStrings.login_enter,
-                            modifier = Modifier.fillMaxWidth(0.6f), rounded = 15)
+                        BlueRoundedButton({ viewModel.signUp(UserSignUpData(uiState.login, uiState.password, uiState.name)) },
+                            MajkoResourceStrings.login_registration, modifier = Modifier.fillMaxWidth(0.6f), rounded = 15)
                         Spacer(modifier = Modifier.height(15.dp))
 
-                        Text(text = MajkoResourceStrings.login_registrationoffer,
-                            modifier = Modifier.clickable { navigator.push(RegistrationScreen()) })
-
+                        Text(text = MajkoResourceStrings.login_enteroffer,
+                            modifier = Modifier.clickable { navigator.push(LoginScreen()) })
                     }
-
                 }
             }
         }
-        }
-
+    }
 }

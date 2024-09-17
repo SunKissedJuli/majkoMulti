@@ -4,10 +4,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GroupById(
+class GroupById(
     @SerialName("groupId") val groupId: String
 )
 @Serializable
-data class GroupByIdUnderscore(
+class GroupByIdUnderscore(
     @SerialName("group_id") val groupId: String
 )

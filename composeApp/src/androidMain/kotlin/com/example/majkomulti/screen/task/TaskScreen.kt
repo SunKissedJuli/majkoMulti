@@ -42,6 +42,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.majkomulti.components.AddButton
 import com.example.majkomulti.components.CustomCircularProgressIndicator
+import com.example.majkomulti.components.CustomScaffold
 import com.example.majkomulti.components.FilterDropdown
 import com.example.majkomulti.components.SearchBox
 import com.example.majkomulti.components.TaskCard
@@ -59,16 +60,14 @@ internal actual class TaskScreen : Screen {
 
         val navigator = LocalNavigator.currentOrThrow
         LaunchedEffect(viewModel) {
-            launch {
-                viewModel.loadData()
-                viewModel.loadSubData()
-            }
+            viewModel.loadData()
+            viewModel.loadSubData()
         }
 
         if (viewModel.status.collectAsState().value && TaskState.InitState==uiState) {
             CustomCircularProgressIndicator()
         } else {
-            Scaffold(
+            CustomScaffold(
                 topBar = {
                     //панель при длинном нажатии
                     if (uiState.isLongtap) {
@@ -117,7 +116,6 @@ internal actual class TaskScreen : Screen {
                 }) {
                 Box(Modifier
                     .fillMaxSize()
-                    .padding(it)
                     .background(MaterialTheme.colorScheme.background)) {
                     Column(Modifier.fillMaxSize()) {
                         SetTaskScreen(viewModel, uiState, navigator)

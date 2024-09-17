@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SearchTask(
+class SearchTask(
     @SerialName("search_str") var searchString: String = ""
 )

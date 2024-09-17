@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GroupInviteResponse(
+class GroupInviteResponse(
     @SerialName("group_id") val groupId: String?,
     @SerialName("invite") val invite: String?,
     @SerialName("user_id") val userId: String?,

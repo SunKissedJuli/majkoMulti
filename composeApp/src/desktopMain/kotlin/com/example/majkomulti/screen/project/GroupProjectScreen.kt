@@ -41,9 +41,7 @@ internal class GroupProjectScreen : Screen {
         val disactiveProject = uiState.groupDisactiveProject
 
         LaunchedEffect(Unit) {
-            launch {
-                viewModel.loadData()
-            }
+            viewModel.loadData()
         }
 
         Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {

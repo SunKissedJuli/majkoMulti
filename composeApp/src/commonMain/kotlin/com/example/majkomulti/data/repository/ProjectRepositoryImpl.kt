@@ -57,8 +57,7 @@ class ProjectRepositoryImpl(private val majkoApi: MajkoApi): ProjectRepository {
     override suspend fun removeProject(projectId: ProjectById): Either<Failure, Unit> {
         return apiCall (call = {
             majkoApi.removeProject(projectId)
-        },
-            mapResponse = { Unit })
+        })
     }
 
     override suspend fun createInvitetoProject(projectById: ProjectByIdUnderscore): Either<Failure, ProjectCreateInviteUi> {

@@ -4,11 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TaskById(
+class TaskById(
     @SerialName("taskId") val taskId: String,
 )
 
 @Serializable
-data class TaskByIdUnderscore(
+class TaskByIdUnderscore(
     @SerialName("task_id") val taskId: String,
 )

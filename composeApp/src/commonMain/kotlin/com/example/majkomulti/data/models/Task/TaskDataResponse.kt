@@ -7,7 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TaskDataResponse(
+class TaskDataResponse(
     @SerialName("id") val id: String?,
     @SerialName("createdAt") val createdAt: String?,
     @SerialName("updatedAt") val updatedAt: String?,

@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import com.example.majkomulti.components.CustomScaffold
 import com.example.majkomulti.components.GroupDesktopCard
 import com.example.majkomulti.components.SearchBox
 import com.example.majkomulti.strings.MajkoResourceStrings
@@ -36,39 +37,38 @@ internal class PrivateGroupScreen : Screen {
 
         val viewModel = rememberScreenModel { GroupViewModel() }
         LaunchedEffect(Unit) {
-            launch {
-                viewModel.loadData()
-            }
+            viewModel.loadData()
         }
 
         val uiState by viewModel.stateFlow.collectAsState()
 
         val group = uiState.groupGroup
 
-        Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-
-            Row(
-                Modifier.fillMaxWidth().height(60.dp)
-                    .background(MaterialTheme.colorScheme.onSecondaryContainer),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically) {
+        CustomScaffold(
+            topBar = {
                 Row(
-                    Modifier.fillMaxWidth(0.5f).height(40.dp).clip(RoundedCornerShape(30.dp))
-                        .background(MaterialTheme.colorScheme.primary),
+                    Modifier.fillMaxWidth().height(60.dp)
+                        .background(MaterialTheme.colorScheme.onSecondaryContainer),
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically) {
-                    SearchBox(value = uiState.searchString, onValueChange = { viewModel.updateSearchString(it, 2) },
-                        placeholder = MajkoResourceStrings.group_search)
+                    Row(
+                        Modifier.fillMaxWidth(0.5f).height(40.dp).clip(RoundedCornerShape(30.dp))
+                            .background(MaterialTheme.colorScheme.primary),
+                        verticalAlignment = Alignment.CenterVertically) {
+                        SearchBox(value = uiState.searchString, onValueChange = { viewModel.updateSearchString(it, 2) },
+                            placeholder = MajkoResourceStrings.group_search)
+                    }
                 }
             }
+        ) {
+            Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
 
-            Row(Modifier.fillMaxSize().padding(20.dp)){
-                Column(Modifier.fillMaxHeight().fillMaxWidth(0.5f)) {
-                    LazyColumn(
-                        Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(5.dp)) {
-
-                        item {
+                Row(Modifier.fillMaxSize().padding(20.dp)){
+                    Column(Modifier.fillMaxHeight().fillMaxWidth(0.5f)) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(5.dp)) {
                             Text(
                                 text = MajkoResourceStrings.group_group,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -79,18 +79,25 @@ internal class PrivateGroupScreen : Screen {
                                 )
                             )
                         }
-                        items(group){ group ->
-                            GroupDesktopCard(
-                                groupData = group,
-                                onLongTap = { viewModel.openPanel(it) },
-                                onLongTapRelease = { viewModel.openPanel(it) },
-                                isSelected = uiState.longtapGroupId.contains(group.id)
-                            )
+                        LazyColumn(
+                            Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                            items(group){ group ->
+                                GroupDesktopCard(
+                                    groupData = group,
+                                    onLongTap = { viewModel.openPanel(it) },
+                                    onLongTapRelease = { viewModel.openPanel(it) },
+                                    isSelected = uiState.longtapGroupId.contains(group.id)
+                                )
+                            }
                         }
                     }
                 }
-            }
 
+            }
         }
     }
+
+
 }

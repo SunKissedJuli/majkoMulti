@@ -40,6 +40,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.example.majkomulti.components.AddButton
 import com.example.majkomulti.components.BlueRoundedButton
 import com.example.majkomulti.components.CustomCircularProgressIndicator
+import com.example.majkomulti.components.CustomScaffold
 import com.example.majkomulti.components.FilterDropdown
 import com.example.majkomulti.components.GroupCard
 import com.example.majkomulti.components.SearchBox
@@ -54,16 +55,17 @@ internal actual class GroupScreen : Screen {
     override fun Content() {
         val viewModel = rememberScreenModel { GroupViewModel() }
         LaunchedEffect(Unit) {
-            launch {
-                viewModel.loadData()
-            }
+            viewModel.loadData()
         }
 
         val uiState by viewModel.stateFlow.collectAsState()
+        val personalGroup = uiState.personalGroup
+        val groupGroup = uiState.groupGroup
+
         if (viewModel.status.collectAsState().value) {
             CustomCircularProgressIndicator()
         } else {
-            Scaffold(
+            CustomScaffold(
                 topBar = {
                     Row(
                         Modifier
@@ -146,16 +148,59 @@ internal actual class GroupScreen : Screen {
                             }
                         }
                     }
-                }
-            ) {
-                Box(
-                    Modifier
+                }) {
+                Box(Modifier
                         .fillMaxSize()
-                        .padding(it)
-                        .background(MaterialTheme.colorScheme.background)
-                ) {
+                        .background(MaterialTheme.colorScheme.background)) {
                     Column(Modifier.fillMaxSize()) {
-                        SetGroupScreen(uiState, viewModel)
+
+
+                        Column(
+                            Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            LazyColumn(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp)) {
+
+                                if(uiState.groupGroup.isNotEmpty()) {
+                                    item {
+                                        Text(
+                                            text = MajkoResourceStrings.group_group,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp)
+                                        )
+                                    }
+                                }
+                                items(groupGroup) { group ->
+                                    GroupCard(groupData = group,
+                                        onLongTap = { viewModel.openPanel(it) },
+                                        onLongTapRelease = { viewModel.openPanel(it) },
+                                        isSelected = uiState.longtapGroupId.contains(group.id))
+                                }
+
+                                if(uiState.personalGroup.isNotEmpty()) {
+                                    item {
+                                        Text(
+                                            text = MajkoResourceStrings.group_personal,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp)
+                                        )
+                                    }
+                                }
+                                items(personalGroup) { group ->
+                                    GroupCard(groupData = group,
+                                        onLongTap = { viewModel.openPanel(it) },
+                                        onLongTapRelease = { viewModel.openPanel(it) },
+                                        isSelected = uiState.longtapGroupId.contains(group.id))
+                                }
+
+                            }
+                        }
                     }
 
                     Box(Modifier.align(Alignment.BottomEnd)) {
@@ -168,58 +213,7 @@ internal actual class GroupScreen : Screen {
     }
 }
 
-@Composable
-private fun SetGroupScreen(uiState: GroupState, viewModel: GroupViewModel) {
-    val personalGroup = uiState.personalGroup
-    val groupGroup = uiState.groupGroup
 
-    Column(
-        Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top
-    ) {
-        LazyColumn(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)) {
-
-            if(uiState.groupGroup.isNotEmpty()) {
-                item {
-                    Text(
-                        text = MajkoResourceStrings.group_group,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp)
-                    )
-                }
-            }
-            items(groupGroup) { group ->
-                GroupCard(groupData = group,
-                    onLongTap = { viewModel.openPanel(it) },
-                    onLongTapRelease = { viewModel.openPanel(it) },
-                    isSelected = uiState.longtapGroupId.contains(group.id))
-            }
-
-            if(uiState.personalGroup.isNotEmpty()) {
-                item {
-                    Text(
-                        text = MajkoResourceStrings.group_personal,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp)
-                    )
-                }
-            }
-            items(personalGroup) { group ->
-                GroupCard(groupData = group,
-                    onLongTap = { viewModel.openPanel(it) },
-                    onLongTapRelease = { viewModel.openPanel(it) },
-                    isSelected = uiState.longtapGroupId.contains(group.id))
-            }
-
-        }
-    }
-}
 
 @Composable
 private fun AddGroup(uiState: GroupState,  onUpdateName: (String) -> Unit,

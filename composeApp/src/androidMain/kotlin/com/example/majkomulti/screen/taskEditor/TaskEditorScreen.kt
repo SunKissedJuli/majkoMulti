@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -57,8 +58,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.SubcomposeAsyncImage
+import com.example.majkomulti.components.AsyncFormatImageViewer
 import com.example.majkomulti.components.BlueRoundedButton
 import com.example.majkomulti.components.ButtonBack
+import com.example.majkomulti.components.CustomScaffold
 import com.example.majkomulti.components.DeadlineDatePicker
 import com.example.majkomulti.components.ExitAlertDialog
 import com.example.majkomulti.components.HorizontalLine
@@ -67,6 +70,7 @@ import com.example.majkomulti.components.TaskCard
 import com.example.majkomulti.data.models.NoteData.NoteData
 import com.example.majkomulti.data.models.Task.TaskData
 import com.example.majkomulti.data.models.Task.TaskUpdateData
+import com.example.majkomulti.ext.clickableBlank
 import com.example.majkomulti.strings.MajkoResourceStrings
 import io.github.skeptick.libres.compose.painterResource
 import com.example.majkomulti.images.MajkoResourceImages
@@ -81,12 +85,11 @@ class TaskEditorScreen(val taskId: String = "0") : Screen, KoinComponent {
         val colorScheme = MaterialTheme.colorScheme
         val viewModel = rememberScreenModel { TaskEditorViewModel() }
         LaunchedEffect(Unit){
-          // launch {
-                viewModel.loadData(taskId, colorScheme)
-          //  }
+            viewModel.loadData(taskId, colorScheme)
         }
         val uiState by viewModel.stateFlow.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
+        val uriHandler = LocalUriHandler.current
         var filePickerShow by remember { mutableStateOf(false) }
         var filePickerPermission by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
@@ -112,7 +115,7 @@ class TaskEditorScreen(val taskId: String = "0") : Screen, KoinComponent {
                 AddNewTask(uiState, viewModel, { viewModel.addingTask() })
             }
 
-            Scaffold(
+            CustomScaffold(
                 topBar = {
                     Row(
                         Modifier
@@ -168,30 +171,19 @@ class TaskEditorScreen(val taskId: String = "0") : Screen, KoinComponent {
                     Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
-                        .background(uiState.backgroundColor)
-                        .padding(it)
-                ) {
+                        .background(uiState.backgroundColor)) {
 
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                    ) {
+                    Column(Modifier.fillMaxWidth()) {
                         BasicTextField(
                             value = uiState.taskName,
                             modifier = Modifier.padding(horizontal = 20.dp, vertical = 15.dp),
-                            textStyle = TextStyle.Default.copy(
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            ),
+                            textStyle = TextStyle.Default.copy(fontSize = 20.sp, fontWeight = FontWeight.Bold),
                             onValueChange = { viewModel.updateTaskName(it) },
                             decorationBox = { innerTextField ->
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     if (uiState.taskName.isEmpty()) {
-                                        Text(
-                                            text = MajkoResourceStrings.taskeditor_name,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            fontSize = 20.sp
-                                        )
+                                        Text(text = MajkoResourceStrings.taskeditor_name,
+                                            color = MaterialTheme.colorScheme.onSurface, fontSize = 20.sp)
                                     }
                                     innerTextField()
                                 }
@@ -204,11 +196,8 @@ class TaskEditorScreen(val taskId: String = "0") : Screen, KoinComponent {
                             decorationBox = { innerTextField ->
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     if (uiState.taskText.isEmpty()) {
-                                        Text(
-                                            text = MajkoResourceStrings.taskeditor_hint,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            fontSize = 18.sp
-                                        )
+                                        Text(text = MajkoResourceStrings.taskeditor_hint,
+                                            color = MaterialTheme.colorScheme.onSurface, fontSize = 18.sp)
                                     }
                                     innerTextField()
                                 }
@@ -227,35 +216,8 @@ class TaskEditorScreen(val taskId: String = "0") : Screen, KoinComponent {
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(uiState.taskFiles) { file ->
-                                SubcomposeAsyncImage(file.link,
-                                    contentDescription = "", modifier = Modifier
-                                        .height(120.dp)
-                                        .width(120.dp)
-                                        .fillMaxWidth()
-                                        .clip(RoundedCornerShape(10.dp)),
-                                    contentScale = ContentScale.Crop,
-                                    error = {
-                                        if (file.link.endsWith(".pdf")) {
-                                            Row(
-                                                Modifier
-                                                    .height(120.dp)
-                                                    .width(120.dp)
-                                                    .clip(RoundedCornerShape(10.dp))
-                                                    .background(
-                                                        MaterialTheme.colorScheme.primary,
-                                                        shape = RoundedCornerShape(10.dp)
-                                                    ),
-                                                horizontalArrangement = Arrangement.Center,
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Text(
-                                                    text = MajkoResourceStrings.common_pdf,
-                                                    color = Color.White,
-                                                    fontWeight = FontWeight.Bold
-                                                )
-                                            }
-                                        }
-                                    })
+                                AsyncFormatImageViewer(file.link, uriHandler,
+                                    modifier = Modifier.height(120.dp).width(120.dp))
                                 Spacer(Modifier.width(10.dp))
                             }
                         }
@@ -263,56 +225,45 @@ class TaskEditorScreen(val taskId: String = "0") : Screen, KoinComponent {
                         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                             BlueRoundedButton(onClick = {
                                 scope.launch {
-                                    if (viewModel.filePermissionsService.checkPermission(Permission.READ_EXTERNAL_STORAGE)
-                                            .granted()
-                                    ) {
+                                    if (viewModel.filePermissionsService.checkPermission(Permission.MANAGE_EXTERNAL_STORAGE)
+                                        .granted()) {
                                         filePickerShow = true
                                     } else {
                                         filePickerPermission = true
                                         viewModel.filePermissionsService.providePermission(
-                                            Permission.READ_EXTERNAL_STORAGE
+                                            Permission.MANAGE_EXTERNAL_STORAGE
                                         )
                                     }
-
                                 }
 
                             }, buttonText = "Добавить файл")
-                            FilesPicker(
-                                filePickerShow,
-                                fileExtensions = listOf("pdf", "doc", "docx", "pptx", "png", "jpg")
-                            ) { files ->
+                            FilesPicker(filePickerShow,
+                                fileExtensions = listOf("pdf", "doc", "docx", "pptx", "png", "jpg"))
+                            { files ->
                                 filePickerPermission = false
                                 filePickerShow = false
                                 val pathChosen = files ?: return@FilesPicker
                                 val newFiles = pathChosen.map { it.path }
                                 viewModel.addFile(newFiles, colorScheme)
                             }
-
                         }
                     }
                     Column(
                         verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.Start
-                    ) {
+                        horizontalAlignment = Alignment.Start) {
                         Column(Modifier.padding(start = 20.dp, top = 20.dp, end = 20.dp)) {
                             Row(
                                 Modifier
                                     .fillMaxHeight()
                                     .clickable { viewModel.addNewNote() },
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                                verticalAlignment = Alignment.CenterVertically) {
 
-                                Icon(
-                                    painter = painterResource(MajkoResourceImages.icon_plus),
-                                    contentDescription = "",
-                                    tint = MaterialTheme.colorScheme.background
-                                )
+                                Icon(painter = painterResource(MajkoResourceImages.icon_plus),
+                                    contentDescription = "", tint = MaterialTheme.colorScheme.background)
 
                                 Spacer(modifier = Modifier.width(10.dp))
-                                Text(
-                                    text = MajkoResourceStrings.taskeditor_add,
-                                    fontSize = 18.sp, fontWeight = FontWeight.Medium,
-                                )
+                                Text(text = MajkoResourceStrings.taskeditor_add,
+                                    fontSize = 18.sp, fontWeight = FontWeight.Medium,)
                             }
                             HorizontalLine()
                         }
@@ -329,87 +280,54 @@ class TaskEditorScreen(val taskId: String = "0") : Screen, KoinComponent {
                                     decorationBox = { innerTextField ->
                                         Row(modifier = Modifier.fillMaxWidth()) {
                                             if (uiState.noteText.isEmpty()) {
-                                                Text(
-                                                    text = MajkoResourceStrings.taskeditor_hint,
-                                                    color = MaterialTheme.colorScheme.onSurface,
-                                                    fontSize = 18.sp
-                                                )
+                                                Text(text = MajkoResourceStrings.taskeditor_hint,
+                                                    color = MaterialTheme.colorScheme.onSurface, fontSize = 18.sp)
                                             }
                                             innerTextField()
                                         }
                                     })
 
-                                Row(
-                                    Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
+                                Row(Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center) {
 
-                                    Button(
-                                        onClick = {
-                                            viewModel.addNote(
-                                                NoteData(
-                                                    uiState.taskId,
-                                                    uiState.noteText
-                                                )
-                                            )
-                                        },
-                                        shape = CircleShape,
-                                        modifier = Modifier
-                                            .fillMaxWidth(0.65f)
+                                    Button(onClick = { viewModel.addNote(NoteData(uiState.taskId, uiState.noteText)) },
+                                        shape = CircleShape, modifier = Modifier.fillMaxWidth(0.65f)
                                             .padding(vertical = 10.dp),
-                                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-                                    ) {
-                                        Text(
-                                            text = MajkoResourceStrings.project_add,
+                                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)) {
+                                        Text(text = MajkoResourceStrings.project_add,
                                             color = MaterialTheme.colorScheme.background,
-                                            fontSize = 18.sp,
-                                            fontWeight = FontWeight.Medium
-                                        )
+                                            fontSize = 18.sp, fontWeight = FontWeight.Medium)
                                     }
                                 }
                             }
                         }
 
                         //отображение notes
-                        SetNotes(
-                            uiState,
-                            onUpdateNoteText = viewModel::updateOldNoteText,
-                            onSaveNote = viewModel::saveUpdateNote,
-                            onRemoveNote = viewModel::removeNote
-                        )
+                        SetNotes(uiState,onUpdateNoteText = viewModel::updateOldNoteText,
+                            onSaveNote = viewModel::saveUpdateNote, onRemoveNote = viewModel::removeNote)
 
                         //отображение субтасков
                         LazyRow(Modifier.padding(all = 5.dp)) {
                             items(uiState.subtask) { subtask ->
                                 Column(Modifier.width(200.dp)) {
-                                    TaskCard(
-                                        onClick = { navigator.push(TaskEditorScreen(it)) },
+                                    TaskCard(onClick = { navigator.push(TaskEditorScreen(it)) },
                                         viewModel.getPriority(subtask.priority),
-                                        viewModel.getStatusName(subtask.status),
-                                        subtask
-                                    )
+                                        viewModel.getStatusName(subtask.status), subtask)
                                 }
                             }
                         }
                     }
 
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        BlueRoundedButton(
-                            { viewModel.addingTask() }, MajkoResourceStrings.taskeditor_addtask,
-                            modifier = Modifier.padding(bottom = 10.dp)
-                        )
+                        BlueRoundedButton({ viewModel.addingTask() }, MajkoResourceStrings.taskeditor_addtask,
+                            modifier = Modifier.padding(bottom = 10.dp))
                     }
 
 
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(start = 15.dp, top = 5.dp, end = 15.dp, bottom = 15.dp)
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(color = MaterialTheme.colorScheme.background),
+                    Column(Modifier.fillMaxWidth().padding(start = 15.dp, top = 5.dp, end = 15.dp, bottom = 15.dp)
+                        .clip(RoundedCornerShape(20.dp)).background(color = MaterialTheme.colorScheme.background),
                         horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.Top
-                    ) {
+                        verticalArrangement = Arrangement.Top) {
 
                         Column(Modifier.padding(horizontal = 20.dp, vertical = 10.dp)) {
 
@@ -444,11 +362,9 @@ class TaskEditorScreen(val taskId: String = "0") : Screen, KoinComponent {
                             HorizontalLine()
                         }
                     }
-
                 }
             }
         }
-
     }
 }
 
@@ -457,18 +373,11 @@ class TaskEditorScreen(val taskId: String = "0") : Screen, KoinComponent {
 @Composable
 private fun AddNewTask(uiState: TaskEditorState, viewModel: TaskEditorViewModel, onDismissRequest: () -> Unit) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .clip(RoundedCornerShape(25.dp))
-                .background(MaterialTheme.colorScheme.secondary)) {
+        Card(modifier = Modifier.fillMaxWidth().padding(16.dp)
+            .clip(RoundedCornerShape(25.dp)).background(MaterialTheme.colorScheme.secondary)) {
             Column {
-                Column(
-                    Modifier
-                        .padding(all = 15.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(color = MaterialTheme.colorScheme.background),
+                Column(Modifier.padding(all = 15.dp).clip(RoundedCornerShape(20.dp))
+                    .background(color = MaterialTheme.colorScheme.background),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top) {
 
@@ -510,19 +419,14 @@ private fun AddNewTask(uiState: TaskEditorState, viewModel: TaskEditorViewModel,
                         }
                     )
                 }
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(start = 15.dp, top = 5.dp, end = 15.dp, bottom = 15.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(color = MaterialTheme.colorScheme.background),
+                Column(Modifier.fillMaxWidth().padding(start = 15.dp, top = 5.dp, end = 15.dp, bottom = 15.dp)
+                    .clip(RoundedCornerShape(20.dp)).background(color = MaterialTheme.colorScheme.background),
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.Top) {
 
                     Column(Modifier.padding(horizontal = 20.dp, vertical = 10.dp)) {
 
-                        DeadlineDatePicker(
-                            currentDeadline = uiState.subtaskDeadline,
+                        DeadlineDatePicker(currentDeadline = uiState.subtaskDeadline,
                             onUpdateDeadline = { newDate -> viewModel.updateSubtaskDeadlie(newDate) })
                         HorizontalLine()
 

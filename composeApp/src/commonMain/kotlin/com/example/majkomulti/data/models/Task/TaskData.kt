@@ -3,7 +3,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TaskData(
+class TaskData(
     @SerialName("title") val title : String?,
     @SerialName("text") val text : String?,
     @SerialName("deadline") val deadline : String?,

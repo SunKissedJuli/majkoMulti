@@ -58,8 +58,7 @@ class GroupRepositoryImpl (private val majkoApi: MajkoApi): GroupRepository{
     override suspend fun removeGroup(groupId: GroupById): Either<Failure, Unit> {
         return apiCall (call = {
             majkoApi.removeGroup(groupId)
-        },
-            mapResponse = { Unit })
+        })
     }
 
     override suspend fun addProjectInGroup(group: ProjectInGroup): Either<Failure, ProjectDataUi> {

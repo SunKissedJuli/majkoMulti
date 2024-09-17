@@ -30,7 +30,8 @@ suspend fun file(context: Context, uri: String?): File? {
             val fileWithoutSpaces: File
             val newName = file.name.replace(" ", "_").replace(Regex("[()]"), "")
             fileWithoutSpaces = File(file.parent, newName)
-            file.copyTo(fileWithoutSpaces) // Создаем копию файла с новым именем
+            return fileWithoutSpaces
+        //    file.copyTo(fileWithoutSpaces) // Создаем копию файла с новым именем
         } else {
             file
         }

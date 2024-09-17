@@ -41,7 +41,6 @@ class InfoRepositoryImpl (private val majkoApi: MajkoApi, private val multipartM
                 listOf(
                     Form.FormBody("task_id", taskId),
                     Form.FormFile("files", files),
-              //  *files.map { Form.FormFile("files", it) }.toTypedArray()
                 )  )
 
             majkoApi.uploadFile(body)

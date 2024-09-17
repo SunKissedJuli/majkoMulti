@@ -41,16 +41,11 @@ internal class RegistrationViewModel : BaseScreenModel<RegistrationState, Regist
     fun signUp(user: UserSignUpData) = intent {
         launchOperation(
             operation = {
-                userRepository.signUp(
-                    user
-                )
+                userRepository.signUp(user)
             },
             success = { clientData ->
                 postSideEffectLocal(RegistrationEvent.RegistrationSuccess)
                 authManager.token = clientData.accessToken
-            },
-            failure = {
-
             }
         )
     }

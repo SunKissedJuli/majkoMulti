@@ -44,7 +44,6 @@ class TaskRepositoryImpl (private val majkoApi: MajkoApi, private val manager: A
 
     }
 
-
     override suspend fun postNewTask(task: TaskData): Either<Failure, TaskDataUi> {
         return apiCall (call = {
             majkoApi.postNewTask(task)
@@ -62,8 +61,7 @@ class TaskRepositoryImpl (private val majkoApi: MajkoApi, private val manager: A
     override suspend fun removeTask(taskId: TaskByIdUnderscore): Either<Failure, Unit> {
         return apiCall (call = {
             majkoApi.removeTask(taskId)
-        },
-            mapResponse = { Unit })
+        })
     }
 
     override suspend fun updateTask(taskData: TaskUpdateData): Either<Failure, TaskDataUi> {
@@ -118,8 +116,7 @@ class TaskRepositoryImpl (private val majkoApi: MajkoApi, private val manager: A
     override suspend fun removeNote(noteId: NoteById): Either<Failure, Unit> {
         return apiCall (call = {
             majkoApi.removeNote(noteId)
-        },
-            mapResponse = { Unit })
+        })
     }
 
     override suspend fun getNotes(taskId: TaskById): Either<Failure, List<NoteDataUi>> {

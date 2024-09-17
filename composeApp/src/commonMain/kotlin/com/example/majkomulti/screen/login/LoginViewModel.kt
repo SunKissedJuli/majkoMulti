@@ -37,12 +37,8 @@ internal class LoginViewModel : BaseScreenModel<LoginState, LoginEvent>(LoginSta
                 )
             },
             success = { clientData ->
-                postSideEffectLocal(LoginEvent.LoginSuccess)
                 authManager.token = clientData.accessToken
-                updatePassword("11111111111")
-            },
-            failure = {
-                updatePassword("000000000")
+                postSideEffectLocal(LoginEvent.LoginSuccess)
             }
         )
     }

@@ -7,7 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GroupResponse(
+class GroupResponse(
     @SerialName("id") val id: String?,
     @SerialName("title") val title: String?,
     @SerialName("description") val description: String?,
@@ -24,7 +24,7 @@ data class GroupResponse(
 )
 
 @Serializable
-data class GroupMember(
+class GroupMember(
     @SerialName("id") val id: String?,
     @SerialName("user") val user: CurrentUserDataResponse?,
     @SerialName("role") val role: ProjectRole?

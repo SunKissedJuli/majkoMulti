@@ -1,4 +1,4 @@
-package com.example.majkomulti.screen.login
+package com.example.majkomulti.screen.register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,25 +32,27 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.majkomulti.components.BlueRoundedButton
 import com.example.majkomulti.components.CustomScaffold
 import com.example.majkomulti.components.LineTextField
-import com.example.majkomulti.screen.register.RegistrationScreen
+import com.example.majkomulti.data.models.UsrtSignUp.UserSignUpData
+import com.example.majkomulti.screen.login.LoginScreen
 import com.example.majkomulti.screen.splash.SplashScreen
 import com.example.majkomulti.strings.MajkoResourceStrings
 import kotlinx.coroutines.launch
 
 
-internal actual class LoginScreen: Screen {
+actual internal class RegistrationScreen: Screen {
 
     @Composable
     override fun Content() {
-        val viewModel = rememberScreenModel { LoginViewModel() }
+
+        val viewModel = rememberScreenModel { RegistrationViewModel() }
         val uiState by viewModel.stateFlow.collectAsState()
 
-        val navigator = LocalNavigator.currentOrThrow
+        val navigator =  LocalNavigator.currentOrThrow
 
         LaunchedEffect(viewModel) {
             viewModel.container.sideEffectFlow.collect() {
                 when (it) {
-                    is LoginEvent.LoginSuccess -> {
+                    is RegistrationEvent.RegistrationSuccess -> {
                         navigator.push(SplashScreen())
                     }
                 }
@@ -103,7 +106,7 @@ internal actual class LoginScreen: Screen {
                     Spacer(modifier = Modifier.height(1.dp))
                     Column(
                         Modifier
-                            .fillMaxHeight(0.55f)
+                            .fillMaxHeight(0.76f)
                             .fillMaxWidth(0.8f)
                             .padding(bottom = 60.dp)
                             .background(
@@ -121,16 +124,21 @@ internal actual class LoginScreen: Screen {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.SpaceEvenly
                         ) {
+                            LineTextField(uiState.name, {viewModel.updateUserName(it)},
+                                placeholder = MajkoResourceStrings.login_username)
+                            Spacer(modifier = Modifier.height(15.dp))
 
-                            LineTextField(
-                                uiState.login, { viewModel.updateLogin(it) },
-                                placeholder = MajkoResourceStrings.login_login
-                            )
+                            LineTextField(uiState.login, {viewModel.updateUserLogin(it)},
+                                placeholder = MajkoResourceStrings.login_login)
+                            Spacer(modifier = Modifier.height(15.dp))
 
-                            LineTextField(
-                                uiState.password, { viewModel.updatePassword(it) },
-                                placeholder = MajkoResourceStrings.login_password, isPassword = true
-                            )
+                            LineTextField(uiState.password, {viewModel.updateUserPassword(it)},
+                                placeholder = MajkoResourceStrings.login_password, isPassword = true)
+                            Spacer(modifier = Modifier.height(15.dp))
+
+                            LineTextField(uiState.passwordRepeat, {viewModel.updateUserPasswordRepeat(it)},
+                                placeholder = MajkoResourceStrings.login_passwordrepeat, isPassword = true)
+                            Spacer(modifier = Modifier.height(25.dp))
 
                         }
                     }
@@ -145,16 +153,12 @@ internal actual class LoginScreen: Screen {
                 verticalArrangement = Arrangement.Bottom
             ) {
 
-                BlueRoundedButton(
-                    { viewModel.login(uiState.login, uiState.password) },
-                    MajkoResourceStrings.login_enter,
-                    modifier = Modifier.fillMaxWidth(0.73f),
-                    rounded = 15
-                )
+                BlueRoundedButton({ viewModel.signUp(UserSignUpData(uiState.login, uiState.password, uiState.name)) },
+                    MajkoResourceStrings.login_registration,    modifier = Modifier.fillMaxWidth(0.73f), rounded = 15)
 
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(text = MajkoResourceStrings.login_registrationoffer,
-                    modifier = Modifier.clickable { navigator.push(RegistrationScreen()) })
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(text = MajkoResourceStrings.login_enteroffer,
+                    modifier = Modifier.clickable { navigator.push(LoginScreen()) })
             }
         }
     }

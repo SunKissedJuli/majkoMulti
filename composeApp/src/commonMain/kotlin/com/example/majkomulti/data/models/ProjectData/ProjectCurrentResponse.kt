@@ -5,7 +5,7 @@ import com.example.majkomulti.data.models.User.CurrentUserDataResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 @Serializable
-data class ProjectCurrentResponse(
+class ProjectCurrentResponse(
     @SerialName("id") val id: String?,
     @SerialName("createdAt") val createdAt: String?,
     @SerialName("updatedAt") val updatedAt: String?,
@@ -23,27 +23,27 @@ data class ProjectCurrentResponse(
 )
 
 @Serializable
-data class Group(
+class Group(
     @SerialName("id") val id: String?,
     @SerialName("name") val name: String?
 )
 
 @Serializable
-data class File(
+class File(
     @SerialName("id") val id: String?,
     @SerialName("name") val name: String?,
     @SerialName("url") val url: String?
 )
 
 @Serializable
-data class Member(
+class Member(
     @SerialName("project_member_id") var projectMemberId: String?,
     @SerialName("user") val user: CurrentUserDataResponse?,
     @SerialName("role_id") var roleId:ProjectRole?
 )
 
 @Serializable
-data class ProjectRole(
+class ProjectRole(
     @SerialName("id") val id: Int?,
     @SerialName("name") val name: String?,
     @SerialName("created_at") val createdAt: String?,

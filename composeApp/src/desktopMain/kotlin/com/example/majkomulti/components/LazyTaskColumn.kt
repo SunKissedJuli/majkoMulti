@@ -1,6 +1,8 @@
 package com.example.majkomulti.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -24,32 +26,38 @@ fun LazyTaskColumn(
     color: @Composable (Int)-> Color,
     onBurnStarClick: (String) -> Unit = {},
     onDeadStarClick: (String) -> Unit = {},
-    text: String){
-    Spacer(Modifier.width(15.dp))
+    text: String,
+    paddingValues: PaddingValues  = PaddingValues(vertical = 20.dp)){
 
-    LazyColumn(
-        Modifier.width(200.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(5.dp)){
-        item {
+    Spacer(Modifier.width(15.dp))
+    Column {
+        Column( Modifier.width(200.dp).padding(top=20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(5.dp)) {
             Text(text = text,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 10.dp,
                     top = 5.dp,
-                    bottom = 5.dp))
+                    bottom = 10.dp))
         }
-        if (taskList.isNotEmpty()) {
-            animatedItems(taskList){ task ->
-                TaskDesktopCard(
-                    onClick = onClick,
-                    statusName = status(task.status),
-                    priorityColor = color(task.priority),
-                    taskData = task,
-                    onBurnStarClick = onBurnStarClick,
-                    onDeadStarClick = onDeadStarClick,
-                    onLongTap = { },
-                    onLongTapRelease = { },
-                    isSelected = uiState.longtapTaskId.contains(task.id))
+
+        LazyColumn(
+            Modifier.width(200.dp).padding(bottom = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(5.dp)){
+            if (taskList.isNotEmpty()) {
+                animatedItems(taskList){ task ->
+                    TaskDesktopCard(
+                        onClick = onClick,
+                        statusName = status(task.status),
+                        priorityColor = color(task.priority),
+                        taskData = task,
+                        onBurnStarClick = onBurnStarClick,
+                        onDeadStarClick = onDeadStarClick,
+                        onLongTap = { },
+                        onLongTapRelease = { },
+                        isSelected = uiState.longtapTaskId.contains(task.id))
+                }
             }
         }
     }

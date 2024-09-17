@@ -3,6 +3,7 @@ package com.example.majkomulti.screen.task
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,10 +43,8 @@ class PersonalTaskScreen : Screen {
         val favoritesTaskList = uiState.favoritesTaskList
 
         LaunchedEffect(Unit) {
-            launch {
-                viewModel.loadSortData()
-                viewModel.loadSubData()
-            }
+            viewModel.loadSortData()
+            viewModel.loadSubData()
         }
 
         Row(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
@@ -66,11 +65,13 @@ class PersonalTaskScreen : Screen {
                 }
 
                 LazyRow(
-                    Modifier.fillMaxSize().padding(20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.spacedBy(25.dp)) {
                     item {
                         LazyColumn(
                             Modifier.width(200.dp),
+                            contentPadding = PaddingValues(vertical = 20.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(5.dp)
                         ) {

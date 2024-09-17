@@ -42,6 +42,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.SubcomposeAsyncImage
 import com.example.majkomulti.ext.clickableBlank
 import com.example.majkomulti.components.BlueRoundedButton
+import com.example.majkomulti.components.CustomScaffold
 import com.example.majkomulti.components.LineTextField
 import com.example.majkomulti.ext.granted
 import com.example.majkomulti.images.MajkoResourceImages
@@ -63,30 +64,80 @@ internal actual class ProfileScreen: Screen, KoinComponent {
         val viewModel = rememberScreenModel { ProfileViewModel() }
 
         LaunchedEffect(Unit){
-            launch {
-                viewModel.loadData()
-            }
+            viewModel.loadData()
         }
 
         val uiState by viewModel.stateFlow.collectAsState()
-
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
+        val navigator = RootNavigator.currentOrThrow
+        CustomScaffold {
             Column(
-                Modifier.fillMaxSize(),
+                Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center) {
-                CircleAsyncImageLoader(uiState.avatar, 200, ){
-                    viewModel.updateUserProfile(it)
+                Column(
+                    Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center) {
+                    CircleAsyncImageLoader(uiState.avatar, 200, ){
+                        viewModel.updateUserProfile(it)
+                    }
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = MajkoResourceStrings.profile_username, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Spacer(modifier = Modifier.width(20.dp))
+
+                    LineTextField(uiState.userName, {viewModel.updateUserName(it)},
+                        placeholder = "", modifier = Modifier.width(150.dp))
+
+                    IconButton(onClick = { viewModel.updateNameData(uiState.userName)}) {
+                        Icon(
+                            painterResource(MajkoResourceImages.icon_check), contentDescription = "",
+                            tint = MaterialTheme.colorScheme.primary)
+                    }
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = MajkoResourceStrings.profile_login, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Spacer(modifier = Modifier.width(20.dp))
+
+                    LineTextField(uiState.userEmail, {viewModel.updateUserEmail(it)},
+                        placeholder = "", modifier = Modifier.width(150.dp))
+
+                    IconButton(onClick = { viewModel.updateEmailData(uiState.userName, uiState.userEmail) }) {
+                        Icon(painter = painterResource(MajkoResourceImages.icon_check),
+                            contentDescription = "", tint = MaterialTheme.colorScheme.primary)
+                    }
+                }
+
+                Row(
+                    Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.Bottom){
+                    BlueRoundedButton({ viewModel.changePasswordScreen() }, "Забыли пароль?",
+                        modifier = Modifier.padding(bottom = 10.dp, top = 20.dp))
+                }
+
+                Row(
+                    Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.Bottom) {
+
+                    Text(text =MajkoResourceStrings.profile_logout,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            viewModel.forgetAccount()
+                            navigator.replaceAll(LoginScreen())
+                        })
                 }
             }
-            SetProfileScreen(uiState, {viewModel.updateUserName(it)}, {viewModel.updateUserEmail(it)}, viewModel)
         }
+
 
         /*if (uiState.isChangePassword){
             ChangePassword(uiState,  onUpdateOldPassword = viewModel::updateOldPassword,
@@ -95,67 +146,6 @@ internal actual class ProfileScreen: Screen, KoinComponent {
                 onSave = viewModel::changePassword,
                 onDismissRequest = viewModel::changePasswordScreen)
         }*/
-    }
-}
-
-@Composable
-private fun SetProfileScreen(
-    uiState: ProfileState,
-    onUpdateUserName: (String) -> Unit,
-    onUpdateUserEmail: (String) -> Unit,
-    viewModel: ProfileViewModel) {
-
-    val navigator = RootNavigator.currentOrThrow
-
-    Spacer(modifier = Modifier.height(20.dp))
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(text = MajkoResourceStrings.profile_username, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        Spacer(modifier = Modifier.width(20.dp))
-
-        LineTextField(uiState.userName, {onUpdateUserName(it)},
-            placeholder = "", modifier = Modifier.width(150.dp))
-
-        IconButton(onClick = { viewModel.updateNameData(uiState.userName)}) {
-            Icon(
-                painterResource(MajkoResourceImages.icon_check), contentDescription = "",
-                tint = MaterialTheme.colorScheme.primary)
-        }
-    }
-    Spacer(modifier = Modifier.height(20.dp))
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(text = MajkoResourceStrings.profile_login, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        Spacer(modifier = Modifier.width(20.dp))
-
-        LineTextField(uiState.userEmail, {onUpdateUserEmail(it)},
-            placeholder = "", modifier = Modifier.width(150.dp))
-
-        IconButton(onClick = { viewModel.updateEmailData(uiState.userName, uiState.userEmail) }) {
-            Icon(painter = painterResource(MajkoResourceImages.icon_check),
-                contentDescription = "", tint = MaterialTheme.colorScheme.primary)
-        }
-    }
-
-    Row(
-        Modifier
-        .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.Bottom){
-        BlueRoundedButton({ viewModel.changePasswordScreen() }, "Забыли пароль?",
-            modifier = Modifier.padding(bottom = 10.dp, top = 20.dp))
-    }
-
-    Row(
-        Modifier
-        .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.Bottom) {
-
-        Text(text =MajkoResourceStrings.profile_logout,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable {
-                viewModel.forgetAccount()
-                navigator.replaceAll(LoginScreen())
-            })
     }
 }
 

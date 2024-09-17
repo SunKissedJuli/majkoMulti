@@ -3,7 +3,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TaskUpdateData(
+class TaskUpdateData(
     @SerialName("taskId") val taskId : String,
     @SerialName("title") val title : String,
     @SerialName("text") val text : String,

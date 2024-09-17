@@ -39,6 +39,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.majkomulti.components.AddButton
 import com.example.majkomulti.components.CustomCircularProgressIndicator
+import com.example.majkomulti.components.CustomScaffold
 import com.example.majkomulti.components.FilterDropdown
 import com.example.majkomulti.components.ProjectCard
 import com.example.majkomulti.components.SearchBox
@@ -55,17 +56,17 @@ internal actual class ProjectScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = rememberScreenModel { ProjectViewModel() }
         LaunchedEffect(Unit) {
-            launch {
-                viewModel.loadData()
-            }
+            viewModel.loadData()
         }
 
         val uiState by viewModel.stateFlow.collectAsState()
+        val personalProject = uiState.personalProject
+        val groupProject = uiState.groupProject
 
         if (viewModel.status.collectAsState().value) {
             CustomCircularProgressIndicator()
         } else {
-            Scaffold(
+            CustomScaffold(
                 topBar = {
                     Row(
                         Modifier
@@ -155,71 +156,62 @@ internal actual class ProjectScreen : Screen {
                 Box(
                     Modifier
                         .fillMaxSize()
-                        .padding(it)
                         .background(MaterialTheme.colorScheme.background)
                 ) {
                     Column(Modifier.fillMaxSize()) {
-                        SetProjectScreen(uiState, navigator, viewModel)
+                        Column(Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+
+                            LazyColumn(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                if(groupProject.isNotEmpty()) {
+                                    item {
+                                        Text(
+                                            text = MajkoResourceStrings.project_group,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp)
+                                        )
+                                    }
+                                }
+                                items(groupProject) { project ->
+                                    ProjectCard(
+                                        projectData = project,
+                                        onLongTap = { viewModel.openPanel(it) },
+                                        onLongTapRelease = { viewModel.openPanel(it) },
+                                        isSelected = uiState.longtapProjectId.contains(project.id)
+                                    )
+                                }
+
+                                if(personalProject.isNotEmpty()){
+                                    item {
+                                        Text(text = MajkoResourceStrings.project_personal,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp))
+                                    }
+                                }
+
+                                items(personalProject) { project ->
+                                    ProjectCard(
+                                        projectData = project,
+                                        onLongTap = { viewModel.openPanel(it) },
+                                        onLongTapRelease = { viewModel.openPanel(it) },
+                                        isSelected = uiState.longtapProjectId.contains(project.id)
+                                    )
+                                }
+                            }
+                        }
                     }
 
                     Box(Modifier.align(Alignment.BottomEnd)) {
                         AddButton(onClick = { viewModel.addingProject() })
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SetProjectScreen(uiState: ProjectState, navigator: Navigator, viewModel: ProjectViewModel) {
-    val personalProject = uiState.personalProject
-    val groupProject = uiState.groupProject
-
-    Column(Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top
-    ) {
-
-        LazyColumn(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            if(groupProject.isNotEmpty()) {
-                item {
-                    Text(
-                        text = MajkoResourceStrings.project_group,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp)
-                    )
-                }
-            }
-            items(groupProject) { project ->
-                ProjectCard(
-                    projectData = project,
-                    onLongTap = { viewModel.openPanel(it) },
-                    onLongTapRelease = { viewModel.openPanel(it) },
-                    isSelected = uiState.longtapProjectId.contains(project.id)
-                )
-            }
-
-            if(personalProject.isNotEmpty()){
-                item {
-                    Text(text = MajkoResourceStrings.project_personal,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp))
-                }
-            }
-
-            items(personalProject) { project ->
-                ProjectCard(
-                    projectData = project,
-                    onLongTap = { viewModel.openPanel(it) },
-                    onLongTapRelease = { viewModel.openPanel(it) },
-                    isSelected = uiState.longtapProjectId.contains(project.id)
-                )
             }
         }
     }

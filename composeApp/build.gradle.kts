@@ -19,9 +19,16 @@ configure<de.jensklingenberg.ktorfit.gradle.KtorfitGradleConfiguration>{
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
+    compilerOptions.freeCompilerArgs.addAll(
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:experimentalStrongSkipping=true",
+    )
 }
 
 kotlin {
+    composeCompiler {
+        enableStrongSkippingMode = true
+    }
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {

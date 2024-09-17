@@ -32,21 +32,17 @@ internal actual class SplashScreen : Screen {
         val viewModel = rememberScreenModel { SplashViewModel(Unit) }
         val navigator = LocalNavigator.currentOrThrow
         LaunchedEffect(Unit){
-            launch {
-                viewModel.isAutorize()
-            }
+            viewModel.isAutorize()
         }
 
         LaunchedEffect(viewModel) {
-            launch {
-                viewModel.container.sideEffectFlow.collect() {
-                    when (it) {
-                        is SplashEvent.UserAutorize -> {
-                            navigator.replaceAll(MainVerticalTabScreen())
-                        }
-                        is SplashEvent.UserNotAutorize ->{
-                            navigator.push(RegistrationScreen())
-                        }
+            viewModel.container.sideEffectFlow.collect() {
+                when (it) {
+                    is SplashEvent.UserAutorize -> {
+                        navigator.replaceAll(MainVerticalTabScreen())
+                    }
+                    is SplashEvent.UserNotAutorize ->{
+                        navigator.push(RegistrationScreen())
                     }
                 }
             }

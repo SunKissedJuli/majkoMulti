@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NoteById(
+class NoteById(
     @SerialName("note_id") val noteId: String
 )

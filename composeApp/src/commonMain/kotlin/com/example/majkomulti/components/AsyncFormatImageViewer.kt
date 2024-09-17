@@ -42,7 +42,8 @@ fun AsyncFormatImageViewer(link: String, uriHandler: UriHandler, modifier: Modif
         val fileExtension = link.substring(link.lastIndexOf("."))
         Row(modifier.height(90.dp).width(140.dp)
                 .clip(RoundedCornerShape(10.dp))
-                .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(10.dp)),
+                .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(10.dp))
+            .clickableBlank { uriHandler.openUri(link) },
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically) {
             Text(text = fileExtension, color = Color.White, fontWeight = FontWeight.Bold)
